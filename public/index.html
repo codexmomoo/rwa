@@ -287,7 +287,12 @@ function th() {
 async function apiCall(url, headers = {}) {
   try {
     log(`API Call: ${url.substring(0, 80)}...`);
-    const res = await fetch(url, { headers: { ...headers } });
+    let fetchUrl = url;
+    if (url.includes('studyuk.site') || url.includes('classx.co.in')) {
+      fetchUrl = '/api/proxy?url=' + encodeURIComponent(url);
+      headers = {};
+    }
+    const res = await fetch(fetchUrl, { headers: { ...headers } });
     const text = await res.text();
     try { 
       const json = JSON.parse(text);
