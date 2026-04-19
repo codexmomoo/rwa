@@ -751,7 +751,9 @@ function playVideoWithQuality(quality) {
 
     hls.on(window.Hls.Events.MANIFEST_PARSED, () => {
       log('Manifest parsed, playing...');
-      video.play().catch(e => log(`Play error: ${e.message}`, 'error'));
+      setTimeout(() => {
+        video.play().catch(e => log(`Play error: ${e.message}`, 'error'));
+      }, 300);
     });
 
     hls.on(window.Hls.Events.ERROR, (event, data) => {
@@ -823,7 +825,9 @@ function playLive(url, title) {
     hls.loadSource(proxied);
     hls.attachMedia(video);
     hls.on(window.Hls.Events.MANIFEST_PARSED, () => {
-      video.play().catch(e => log(`Live play error: ${e.message}`, 'error'));
+      setTimeout(() => {
+        video.play().catch(e => log(`Live play error: ${e.message}`, 'error'));
+      }, 300);
     });
     hls.on(window.Hls.Events.ERROR, (event, data) => {
       if (data.fatal) {
