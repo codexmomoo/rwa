@@ -56,18 +56,28 @@ export default async function handler(req, res) {
     }
 
     const contentType = response.headers.get('content-type') || 'application/octet-stream';
-    res.setHeader('Content-Type', contentType);
+    
+    // Force correct content types
+    let finalContentType = contentType;
+    if (targetUrl.includes('.ts')) {
+      finalContentType = 'video/mp2t';
+    } else if (targetUrl.includes('.m3u8')) {
+      finalContentType = 'application/vnd.apple.mpegurl';
+    } else if (targetUrl.includes('.key')) {
+      finalContentType = 'application/octet-stream';
+    }
+    
+    res.setHeader('Content-Type', finalContentType);
     res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.setHeader('Access-Control-Allow-Origin', '*');
 
     // M3U8 file hai toh segment URLs bhi proxy karo
     if (targetUrl.includes('.m3u8') || contentType.includes('mpegurl') || contentType.includes('x-mpegURL')) {
       let text = await response.text();
-
-      // Base URL nikalo
       const baseUrl = targetUrl.substring(0, targetUrl.lastIndexOf('/') + 1);
       const proxyBase = '/api/proxy?url=';
 
-      // Relative .ts aur .m3u8 URLs ko proxy URL mein convert karo
+      // Relative aur absolute URLs dono proxy karo (segments + keys)
       text = text.replace(/^(?!#)([^\r\n]+)$/gm, (line) => {
         line = line.trim();
         if (!line) return line;
@@ -75,6 +85,15 @@ export default async function handler(req, res) {
           return proxyBase + encodeURIComponent(line);
         } else {
           return proxyBase + encodeURIComponent(baseUrl + line);
+        }
+      });
+
+      // Encryption key URIs bhi proxy karo
+      text = text.replace(/URI="([^"]+)"/g, (match, uri) => {
+        if (uri.startsWith('http://') || uri.startsWith('https://')) {
+          return `URI="${proxyBase + encodeURIComponent(uri)}"`;
+        } else {
+          return `URI="${proxyBase + encodeURIComponent(baseUrl + uri)}"`;
         }
       });
 
