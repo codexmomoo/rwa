@@ -716,12 +716,6 @@ function playVideoWithQuality(quality) {
     return;
   }
   
-  // Clean URL - query params remove karo
-  if (url.includes('?')) {
-    url = url.split('?')[0];
-    log(`Cleaned URL: ${url.substring(0, 80)}...`);
-  }
-  
   log(`Playing quality: ${quality}, URL: ${url.substring(0, 80)}...`);
   
   show('pgPlayer');
