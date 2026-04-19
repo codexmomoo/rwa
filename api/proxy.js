@@ -29,6 +29,8 @@ export default async function handler(req, res) {
     'transcoded-videos.classx.co.in',
     'appx-play.akamai.net.in',
     'classx.co.in',
+    'studyuk.site',
+    'rozgarapinew.teachx.in',
   ];
 
   const urlObj = new URL(targetUrl);
