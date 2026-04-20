@@ -1,8 +1,6 @@
 // Vercel Serverless Function - HLS Video Proxy
-// Path: /api/proxy?url=<encoded_m3u8_url>
-
 export default async function handler(req, res) {
-  // CORS headers - sabhi domains allow
+  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', '*');
@@ -24,14 +22,14 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid URL' });
   }
 
-  // Sirf allowed domains proxy karo
+  // Allowed domains
   const allowedDomains = [
     'transcoded-videos.classx.co.in',
     'appx-play.akamai.net.in',
     'classx.co.in',
     'studyuk.site',
     'rozgarapinew.teachx.in',
-    'liveclasses.cloud-front.in',  // ← ADDED FOR LIVE CLASSES
+    'liveclasses.cloud-front.in',
   ];
 
   const urlObj = new URL(targetUrl);
@@ -44,11 +42,10 @@ export default async function handler(req, res) {
   try {
     const response = await fetch(targetUrl, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36',
         'Referer': 'https://appx-play.akamai.net.in/',
         'Origin': 'https://appx-play.akamai.net.in',
         'Accept': '*/*',
-        'Accept-Language': 'en-US,en;q=0.9',
       },
     });
 
@@ -58,50 +55,55 @@ export default async function handler(req, res) {
 
     const contentType = response.headers.get('content-type') || 'application/octet-stream';
 
-    // Force correct content types
-    let finalContentType = contentType;
-    if (targetUrl.includes('.ts')) {
-      finalContentType = 'video/mp2t';
-    } else if (targetUrl.includes('.m3u8')) {
-      finalContentType = 'application/vnd.apple.mpegurl';
-    } else if (targetUrl.includes('.key')) {
-      finalContentType = 'application/octet-stream';
-    }
-
-    res.setHeader('Content-Type', finalContentType);
-    res.setHeader('Cache-Control', 'public, max-age=3600');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-
-    // M3U8 file hai toh segment URLs bhi proxy karo
-    if (targetUrl.includes('.m3u8') || contentType.includes('mpegurl') || contentType.includes('x-mpegURL')) {
+    // M3U8 file - segment URLs ko proxy karo
+    if (targetUrl.includes('.m3u8') || contentType.includes('mpegurl')) {
       let text = await response.text();
       const baseUrl = targetUrl.substring(0, targetUrl.lastIndexOf('/') + 1);
       const proxyBase = '/api/proxy?url=';
+      const cleanBaseUrl = baseUrl.split('?')[0];
 
-      // Relative aur absolute URLs dono proxy karo (segments + keys)
+      // Rewrite segment URLs
       text = text.replace(/^(?!#)([^\r\n]+)$/gm, (line) => {
         line = line.trim();
         if (!line) return line;
+        
+        let segmentUrl;
         if (line.startsWith('http://') || line.startsWith('https://')) {
-          return proxyBase + encodeURIComponent(line);
+          segmentUrl = line;
         } else {
-          return proxyBase + encodeURIComponent(baseUrl + line);
+          segmentUrl = cleanBaseUrl + line;
         }
+        
+        // Add cache buster
+        const separator = segmentUrl.includes('?') ? '&' : '?';
+        return proxyBase + encodeURIComponent(segmentUrl + separator + '_cb=' + Date.now());
       });
 
-      // Encryption key URIs bhi proxy karo
+      // Rewrite key URIs
       text = text.replace(/URI="([^"]+)"/g, (match, uri) => {
+        let keyUrl;
         if (uri.startsWith('http://') || uri.startsWith('https://')) {
-          return `URI="${proxyBase + encodeURIComponent(uri)}"`;
+          keyUrl = uri;
         } else {
-          return `URI="${proxyBase + encodeURIComponent(baseUrl + uri)}"`;
+          keyUrl = cleanBaseUrl + uri;
         }
+        return `URI="${proxyBase + encodeURIComponent(keyUrl)}"`;
       });
 
+      res.setHeader('Content-Type', 'application/vnd.apple.mpegurl');
+      res.setHeader('Cache-Control', 'no-cache, no-store');
       return res.status(200).send(text);
     }
 
-    // Binary content (video segments) seedha stream karo
+    // Video segments (.ts files)
+    let finalContentType = contentType;
+    if (targetUrl.includes('.ts')) {
+      finalContentType = 'video/mp2t';
+    }
+    
+    res.setHeader('Content-Type', finalContentType);
+    res.setHeader('Cache-Control', 'public, max-age=300');
+    
     const buffer = await response.arrayBuffer();
     return res.status(200).send(Buffer.from(buffer));
 
