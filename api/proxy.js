@@ -31,6 +31,7 @@ export default async function handler(req, res) {
     'classx.co.in',
     'studyuk.site',
     'rozgarapinew.teachx.in',
+    'liveclasses.cloud-front.in',  // ← ADDED FOR LIVE CLASSES
   ];
 
   const urlObj = new URL(targetUrl);
@@ -56,7 +57,7 @@ export default async function handler(req, res) {
     }
 
     const contentType = response.headers.get('content-type') || 'application/octet-stream';
-    
+
     // Force correct content types
     let finalContentType = contentType;
     if (targetUrl.includes('.ts')) {
@@ -66,7 +67,7 @@ export default async function handler(req, res) {
     } else if (targetUrl.includes('.key')) {
       finalContentType = 'application/octet-stream';
     }
-    
+
     res.setHeader('Content-Type', finalContentType);
     res.setHeader('Cache-Control', 'public, max-age=3600');
     res.setHeader('Access-Control-Allow-Origin', '*');
