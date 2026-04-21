@@ -853,7 +853,7 @@ function swtab(n){
   if(n===3)loadDash();
 }
 
-// ===== COURSES =====
+ // ===== COURSES =====
 async function loadCourses(reset){
   if(reset){W.pg=0;W.courses=[];W.hasMore=true;W.total=0;}
   const g=document.getElementById('g0');
@@ -870,27 +870,32 @@ async function loadCourses(reset){
       if(newCourses.length===0&&list.length>0){W.hasMore=true;}
       else{W.courses=[...W.courses,...newCourses];W.total=W.courses.length;}
     }
-    if(list.length<10&&W.pg>0)W.hasMore=false;
-    else if(list.length>=10)W.hasMore=true;
-    else if(list.length===0)W.hasMore=false;
-    else W.hasMore=true;
+    // ⭐ FIXED: Proper pagination
+    if(list.length === 0) W.hasMore = false;
+    else if(list.length < 10) W.hasMore = false;
+    else W.hasMore = true;
+    
     renderCourses();
     const lb=document.getElementById('lmbtn');
     if(lb){
       if(W.sq)lb.style.display='none';
       else{
         lb.style.display='block';
-        if(!W.hasMore&&W.pg>0){lb.innerHTML='✅ All Loaded';lb.disabled=true;lb.style.opacity='0.6';}
+        if(!W.hasMore){lb.innerHTML=`✅ All Loaded (${W.total})`;lb.disabled=true;lb.style.opacity='0.6';}
         else{lb.innerHTML=`Load More ↓ (${W.total} loaded)`;lb.disabled=false;lb.style.opacity='1';}
       }
     }
   }catch(e){if(reset)g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h3>Error</h3><p>Failed to load courses</p></div>';}
 }
 function srch(){W.sq=document.getElementById('sinp').value.trim();loadCourses(true);}
-function lmc(){if(!W.hasMore){toast('All loaded!','ok');return;}W.pg+=10;loadCourses(false);}
+function lmc(){if(!W.hasMore){toast('All courses loaded!','ok');return;}W.pg+=10;loadCourses(false);}
 
 const COLS=['#7c6df0','#ff6b35','#22c55e','#f59e0b','#ec4899','#06b6d4','#a78bfa','#fb923c'];
-const EMOJ=['📚','🎯','⚡','🔥','🌟','💡','🎓','📖','🏆','🧠'];
+
+// ⭐ Animated dot function
+function animatedDot(col) {
+  return `<div style="width:14px;height:14px;border-radius:50%;background:${col};box-shadow:0 0 12px ${col};animation:pulse 1.5s infinite;"></div>`;
+}
 
 function renderCourses(){
   const g=document.getElementById('g0');
@@ -898,26 +903,33 @@ function renderCourses(){
   const favs=JSON.parse(localStorage.getItem('favs')||'{}');
   g.innerHTML=W.courses.map((c,i)=>{
     const nm=c.course_name||c.name||`Course ${i+1}`,id=c.id||i,img=c.course_thumbnail||c.image||'';
-    const col=COLS[i%COLS.length],em=EMOJ[i%EMOJ.length],isFav=!!favs[id];
+    const col=COLS[i%COLS.length],isFav=!!favs[id];
+    const dot = animatedDot(col);
     return`<div class="cc" onclick="openSubj('${id}','${esc(nm)}')">`+
-      (img?`<img class="cimg" src="${esc(img)}" loading="lazy" onerror="this.parentElement.querySelector('.cph').style.display='flex';this.style.display='none'">`+`<div class="cph" style="display:none"><div style="background:${col}22;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:${col}">${em}</div></div>`:`<div class="cph"><div style="background:${col}22;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:${col}">${em}</div></div>`)+
+      (img?`<img class="cimg" src="${esc(img)}" loading="lazy" onerror="this.parentElement.querySelector('.cph').style.display='flex';this.style.display='none'">`+`<div class="cph" style="display:none;background:${col}18;align-items:center;justify-content:center;">${dot}</div>`:`<div class="cph" style="background:${col}18;display:flex;align-items:center;justify-content:center;">${dot}</div>`)+
       `<button class="fav-btn ${isFav?'active':''}" onclick="event.stopPropagation();togFav('${id}','${esc(nm)}','${esc(img)}',this)"><svg viewBox='0 0 24 24' width='16' height='16' stroke='currentColor' stroke-width='2' fill='${isFav?'currentColor':'none'}'><path d='M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z'/></svg></button>`+
-      `<div class="cbody"><div class="cico" style="background:${col}22;color:${col}">${em}</div><div><div class="cnm">${esc(nm)}</div><div class="cmeta">Tap to explore</div></div><div class="carrow">›</div></div></div>`;
+      `<div class="cbody"><div class="cico" style="background:${col}22;">${dot}</div><div style="flex:1;min-width:0"><div class="cnm">${esc(nm)}</div><div class="cmeta">Tap to explore</div></div><div class="carrow">›</div></div></div>`;
   }).join('');
 }
+
 function togFav(id,name,img,btn){
   const favs=JSON.parse(localStorage.getItem('favs')||'{}');
   if(favs[id]){delete favs[id];btn.classList.remove('active');toast('Removed','ok');}
   else{favs[id]={id,name,img};btn.classList.add('active');toast('Saved','ok');}
   localStorage.setItem('favs',JSON.stringify(favs));
 }
+
 function loadFavs(){
   const favs=Object.values(JSON.parse(localStorage.getItem('favs')||'{}'));
   const g=document.getElementById('g2');
-  if(!favs.length){g.innerHTML='<div class="empty"><div class="ei">🤍</div><h3>No Saved Courses</h3></div>';return;}
-  g.innerHTML=favs.map((c,i)=>`<div class="cc" onclick="openSubj('${esc(c.id)}','${esc(c.name)}')">`+
-    (c.img?`<img class="cimg" src="${esc(c.img)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="cph">${EMOJ[i%EMOJ.length]}</div>`)+
-    `<div class="cbody"><div class="cnm">${esc(c.name)}</div><div class="carrow">›</div></div></div>`).join('');
+  if(!favs.length){g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><h3>No Saved Courses</h3></div>';return;}
+  g.innerHTML=favs.map((c,i)=>{
+    const col=COLS[i%COLS.length];
+    const dot = animatedDot(col);
+    return`<div class="cc" onclick="openSubj('${esc(c.id)}','${esc(c.name)}')">`+
+      (c.img?`<img class="cimg" src="${esc(c.img)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="cph" style="background:${col}18;display:flex;align-items:center;justify-content:center;">${dot}</div>`)+
+      `<div class="cbody"><div class="cico" style="background:${col}22;">${dot}</div><div style="flex:1"><div class="cnm">${esc(c.name)}</div></div><div class="carrow">›</div></div></div>`;
+  }).join('');
 }
 
 // ===== BATCHES =====
@@ -929,15 +941,17 @@ async function loadBatches(){
     W.batches=list;renderBatches(list);
   }catch(e){g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h3>Error</h3></div>';}
 }
+
 function renderBatches(list){
   const g=document.getElementById('g1');
   if(!list.length){g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div><h3>No Batches</h3></div>';return;}
   g.innerHTML=list.map((c,i)=>{
     const nm=c.course_name||c.name||`Batch ${i+1}`,id=c.id||i,img=c.course_thumbnail||c.image||'';
-    const col=COLS[i%COLS.length],em=EMOJ[i%EMOJ.length];
+    const col=COLS[i%COLS.length];
+    const dot = animatedDot(col);
     return`<div class="cc" onclick="openSubj('${id}','${esc(nm)}')">`+
-      (img?`<img class="cimg" src="${esc(img)}" loading="lazy" onerror="this.parentElement.querySelector('.cph').style.display='flex';this.style.display='none'">`+`<div class="cph" style="display:none"><div style="background:${col}22;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:${col}">${em}</div></div>`:`<div class="cph"><div style="background:${col}22;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:${col}">${em}</div></div>`)+
-      `<div class="cbody"><div class="cico" style="background:${col}22;color:${col}">${em}</div><div><div class="cnm">${esc(nm)}</div><div class="cmeta">Tap to explore</div></div><div class="carrow">›</div></div></div>`;
+      (img?`<img class="cimg" src="${esc(img)}" loading="lazy" onerror="this.parentElement.querySelector('.cph').style.display='flex';this.style.display='none'">`+`<div class="cph" style="display:none;background:${col}18;align-items:center;justify-content:center;">${dot}</div>`:`<div class="cph" style="background:${col}18;display:flex;align-items:center;justify-content:center;">${dot}</div>`)+
+      `<div class="cbody"><div class="cico" style="background:${col}22;">${dot}</div><div style="flex:1;min-width:0"><div class="cnm">${esc(nm)}</div><div class="cmeta">Tap to explore</div></div><div class="carrow">›</div></div></div>`;
   }).join('');
 }
 function loadProf(){
