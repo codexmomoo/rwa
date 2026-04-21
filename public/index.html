@@ -654,14 +654,13 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'DM Sans
 
 // ===== CONFIG (ADMIN CONTROL) =====
 const CONFIG = {
-  maintenance: false,           // true = maintenance mode on
-  maintenanceMsg: "We're upgrading the platform. LIVE CLASSES AND FAST RENDERING etc. Back soon!",
-  notice: true,                 // true = show notice dialog on launch
+  maintenance: false,
+  maintenanceMsg: "We're upgrading the platform. Back soon!",
+  notice: true,
   noticeTitle: "Important Update",
   noticeMsg: "Welcome to the new RWA Web Player v2.1! Join @CODEXUPDATEZ for updates.",
   noticeDismissable: true,
 };
-
 
 // ===== LOGGER =====
 function log(m,t='info'){t==='error'?console.error(m):console.log(m);}
@@ -846,30 +845,75 @@ function swtab(n){
   if(n===3)loadDash();
 }
 
-// ===== COURSES =====
+// ===== COURSES (FIXED - PROPER PAGINATION) =====
 async function loadCourses(reset){
-  if(reset){W.pg=0;W.courses=[];W.hasMore=true;W.total=0;}
+  if(reset){
+    W.pg=0;
+    W.courses=[];
+    W.hasMore=true;
+    W.total=0;
+  }
   const g=document.getElementById('g0');
-  if(reset)g.innerHTML='<div class="skel sk-c"></div><div class="skel sk-c"></div><div class="skel sk-c"></div>';
+  if(reset) g.innerHTML='<div class="skel sk-c"></div><div class="skel sk-c"></div><div class="skel sk-c"></div>';
   try{
-    let url=API.courses+W.pg;if(W.sq)url+='&search='+encodeURIComponent(W.sq);
-    const r=await api(url,th()),list=r.data||[];
-    if(reset){W.courses=list;W.total=list.length;}
-    else{const ids=new Set(W.courses.map(c=>c.id));const nc=list.filter(c=>!ids.has(c.id));W.courses=[...W.courses,...nc];W.total=W.courses.length;}
-    W.hasMore=list.length>=10;
+    let url=API.courses+W.pg;
+    if(W.sq && W.sq !== '') url+='&search='+encodeURIComponent(W.sq);
+    const r=await api(url,th());
+    const list=r.data||[];
+    
+    if(reset){
+      W.courses=list;
+      W.total=list.length;
+    } else {
+      const existingIds=new Set(W.courses.map(c=>c.id));
+      const newCourses=list.filter(c=>!existingIds.has(c.id));
+      W.courses=[...W.courses,...newCourses];
+      W.total=W.courses.length;
+    }
+    
+    // Fix: Check if we got less than 10 courses in this response (not total)
+    if(list.length < 10){
+      W.hasMore=false;
+    } else {
+      W.hasMore=true;
+    }
+    
     renderCourses();
+    
     const lb=document.getElementById('lmbtn');
     if(lb){
-      if(W.sq){lb.style.display='none';}
-      else{lb.style.display='block';lb.innerHTML=W.hasMore?`Load More ↓ (${W.total})`:'✅ All Loaded';lb.disabled=!W.hasMore;}
+      if(W.sq && W.sq !== ''){
+        lb.style.display='none';
+      } else {
+        lb.style.display='flex';
+        if(!W.hasMore){
+          lb.innerHTML='✅ All Loaded';
+          lb.disabled=true;
+          lb.style.opacity='0.6';
+        } else {
+          lb.innerHTML=`Load More ↓ (${W.total} loaded)`;
+          lb.disabled=false;
+          lb.style.opacity='1';
+        }
+      }
     }
-  }catch(e){if(reset)g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h3>Error</h3></div>';}
+  } catch(e){
+    console.error(e);
+    if(reset) g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h3>Error</h3><p>Failed to load courses</p></div>';
+  }
 }
 function srch(){W.sq=document.getElementById('sinp').value.trim();loadCourses(true);}
-function lmc(){if(!W.hasMore){toast('All loaded!','ok');return;}W.pg+=10;loadCourses(false);}
+function lmc(){
+  if(!W.hasMore){
+    toast('All courses loaded!','ok');
+    return;
+  }
+  W.pg+=10;
+  loadCourses(false);
+}
 
 const COLS=['#7c6df0','#ff6b35','#22c55e','#f59e0b','#ec4899','#06b6d4','#a78bfa','#fb923c'];
-const EM=['A','B','C','D','E','F','G','H','I','J']; // unused, kept for compat
+const EM=['A','B','C','D','E','F','G','H','I','J'];
 
 function renderCourses(){
   const g=document.getElementById('g0');
@@ -1149,11 +1193,11 @@ function toast(msg,t=''){
 function toastHide(){const el=document.getElementById('toast');el.className='toast';if(toastTimer){clearTimeout(toastTimer);toastTimer=null;}}
 function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
-// ===== INIT =====
-
 // ===== SVG HELPERS =====
 function svgPh(color, name){
-  const initials = (name||'?').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';
+  let initials = (name||'?').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';
+  if(initials.length===1) initials += (name.charAt(1)||'').toUpperCase();
+  if(initials.length===0) initials='CO';
   return `<svg width="100%" height="100%" viewBox="0 0 360 120" xmlns="http://www.w3.org/2000/svg">
     <defs><linearGradient id="g${initials}" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:${color};stop-opacity:0.25"/>
@@ -1181,13 +1225,12 @@ function svgPlay(){
   </svg>`;
 }
 
+// ===== INIT =====
 window.onload=()=>{
-  // Maintenance mode check
   if(CONFIG.maintenance){
     show('pgMaint');
     return;
   }
-  // Notice dialog
   if(CONFIG.notice){
     const lastNotice = localStorage.getItem('noticeSeen');
     if(!lastNotice || lastNotice !== CONFIG.noticeMsg){
