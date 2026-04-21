@@ -871,11 +871,16 @@ async function loadCourses(reset){
       W.total=W.courses.length;
     }
     
-    // Fix: Check if we got less than 10 courses in this response (not total)
-    if(list.length < 10){
+    // FIX: Proper pagination logic
+    if(list.length === 0){
+      W.hasMore=false;
+    } else if(list.length < 10 && W.pg > 0){
       W.hasMore=false;
     } else {
       W.hasMore=true;
+    }
+    if(W.pg === 0 && W.total < 10){
+      W.hasMore=false;
     }
     
     renderCourses();
@@ -902,7 +907,12 @@ async function loadCourses(reset){
     if(reset) g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h3>Error</h3><p>Failed to load courses</p></div>';
   }
 }
-function srch(){W.sq=document.getElementById('sinp').value.trim();loadCourses(true);}
+
+function srch(){
+  W.sq=document.getElementById('sinp').value.trim();
+  loadCourses(true);
+}
+
 function lmc(){
   if(!W.hasMore){
     toast('All courses loaded!','ok');
@@ -913,21 +923,41 @@ function lmc(){
 }
 
 const COLS=['#7c6df0','#ff6b35','#22c55e','#f59e0b','#ec4899','#06b6d4','#a78bfa','#fb923c'];
-const EM=['A','B','C','D','E','F','G','H','I','J'];
 
 function renderCourses(){
   const g=document.getElementById('g0');
   if(!W.courses.length){g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><h3>No Courses</h3></div>';return;}
   const favs=JSON.parse(localStorage.getItem('favs')||'{}');
   g.innerHTML=W.courses.map((c,i)=>{
-    const nm=c.course_name||c.name||`Course ${i+1}`,id=c.id||i,img=c.course_thumbnail||c.image||'';
-    const col=COLS[i%COLS.length],em=EM[i%EM.length],isFav=!!favs[id];
+    const nm=c.course_name||c.name||`Course ${i+1}`;
+    const id=c.id||i;
+    const img=c.course_thumbnail||c.image||'';
+    const col=COLS[i%COLS.length];
+    const isFav=!!favs[id];
+    
+    // Better initials extraction
+    let initials = '';
+    if(nm){
+      const cleanNm = nm.replace(/[^\w\s\u0900-\u097F]/gi, '');
+      const words = cleanNm.split(' ').filter(w => w.length > 0);
+      if(words.length >= 2){
+        initials = (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
+      } else if(words.length === 1){
+        initials = words[0].substring(0,2).toUpperCase();
+      } else {
+        initials = nm.substring(0,2).toUpperCase();
+      }
+    }
+    if(!initials || initials.length < 1) initials = 'CO';
+    const em = initials.charAt(0);
+    
     return`<div class="cc" onclick="openSubj('${id}','${esc(nm)}')">`+
-      (img?`<img class="cimg" src="${esc(img)}" loading="lazy" onerror="this.parentElement.querySelector('.cph').style.display='flex';this.style.display='none'">`+`<div class="cph" style="display:none">${svgPh(col,nm)}</div>`:`<div class="cph">${svgPh(col,nm)}</div>`)+
+      (img?`<img class="cimg" src="${esc(img)}" loading="lazy" onerror="this.parentElement.querySelector('.cph').style.display='flex';this.style.display='none'">`+`<div class="cph" style="display:none"><div style="background:${col}22;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:${col}">${initials}</div></div>`:`<div class="cph"><div style="background:${col}22;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:${col}">${initials}</div></div>`)+
       `<button class="fav-btn ${isFav?'active':''}" onclick="event.stopPropagation();togFav('${id}','${esc(nm)}','${esc(img)}',this)"><svg viewBox='0 0 24 24' width='16' height='16' stroke='currentColor' stroke-width='2' fill='${isFav?'currentColor':'none'}'><path d='M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z'/></svg></button>`+
       `<div class="cbody"><div class="cico" style="background:${col}22;color:${col}">${em}</div><div><div class="cnm">${esc(nm)}</div><div class="cmeta">Tap to explore</div></div><div class="carrow">›</div></div></div>`;
   }).join('');
 }
+
 function togFav(id,name,img,btn){
   const favs=JSON.parse(localStorage.getItem('favs')||'{}');
   if(favs[id]){delete favs[id];btn.classList.remove('active');toast('Removed','ok');}
@@ -957,9 +987,25 @@ function renderBatches(list){
   if(!list.length){g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div><h3>No Batches</h3></div>';return;}
   g.innerHTML=list.map((c,i)=>{
     const nm=c.course_name||c.name||`Batch ${i+1}`,id=c.id||i,img=c.course_thumbnail||c.image||'';
-    const col=COLS[i%COLS.length],em=EM[i%EM.length];
+    const col=COLS[i%COLS.length];
+    
+    let initials = '';
+    if(nm){
+      const cleanNm = nm.replace(/[^\w\s\u0900-\u097F]/gi, '');
+      const words = cleanNm.split(' ').filter(w => w.length > 0);
+      if(words.length >= 2){
+        initials = (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
+      } else if(words.length === 1){
+        initials = words[0].substring(0,2).toUpperCase();
+      } else {
+        initials = nm.substring(0,2).toUpperCase();
+      }
+    }
+    if(!initials || initials.length < 1) initials = 'BT';
+    const em = initials.charAt(0);
+    
     return`<div class="cc" onclick="openSubj('${id}','${esc(nm)}')">`+
-      (img?`<img class="cimg" src="${esc(img)}" loading="lazy" onerror="this.parentElement.querySelector('.cph').style.display='flex';this.style.display='none'">`+`<div class="cph" style="display:none">${svgPh(col,nm)}</div>`:`<div class="cph">${svgPh(col,nm)}</div>`)+
+      (img?`<img class="cimg" src="${esc(img)}" loading="lazy" onerror="this.parentElement.querySelector('.cph').style.display='flex';this.style.display='none'">`+`<div class="cph" style="display:none"><div style="background:${col}22;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:${col}">${initials}</div></div>`:`<div class="cph"><div style="background:${col}22;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:${col}">${initials}</div></div>`)+
       `<div class="cbody"><div class="cico" style="background:${col}22;color:${col}">${em}</div><div><div class="cnm">${esc(nm)}</div><div class="cmeta">Tap to explore</div></div><div class="carrow">›</div></div></div>`;
   }).join('');
 }
@@ -1096,7 +1142,7 @@ function switchPdf(num){
 }
 function closePdfPanel(){document.getElementById('pdfPanel').classList.add('hidden');document.getElementById('pdfFrame').src='';}
 
-// ===== LIVE (FIXED - SMOOTH PLAYBACK) =====
+// ===== LIVE =====
 async function goLive(){
   show('pgLive');const g=document.getElementById('gl');
   g.innerHTML='<div class="skel sk-r"></div><div class="skel sk-r"></div><div class="skel sk-r"></div>';
