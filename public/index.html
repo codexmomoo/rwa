@@ -846,35 +846,70 @@ function swtab(n){
   if(n===3)loadDash();
 }
 
-// ===== COURSES (FIXED - WORKING PAGINATION FROM SIMPLE CODE) =====
+// ===== COURSES (FIXED - PROPER PAGINATION) =====
 async function loadCourses(reset){
-  if(reset){W.pg=0;W.courses=[];W.hasMore=true;W.total=0;}
+  if(reset){
+    W.pg=0;
+    W.courses=[];
+    W.hasMore=true;
+    W.total=0;
+  }
   const g=document.getElementById('g0');
-  if(reset)g.innerHTML='<div class="skel sk-c"></div><div class="skel sk-c"></div><div class="skel sk-c"></div>';
+  if(reset) g.innerHTML='<div class="skel sk-c"></div><div class="skel sk-c"></div><div class="skel sk-c"></div>';
   try{
-    let url=API.courses+W.pg;if(W.sq)url+='&search='+encodeURIComponent(W.sq);
+    let url=API.courses+W.pg;
+    if(W.sq && W.sq !== '') url+='&search='+encodeURIComponent(W.sq);
     const r=await api(url,th());
     const list=r.data||[];
-    if(reset){W.courses=list;W.total=list.length;}
-    else{
+    
+    if(reset){
+      W.courses=list;
+      W.total=list.length;
+    } else {
       const existingIds=new Set(W.courses.map(c=>c.id));
       const newCourses=list.filter(c=>!existingIds.has(c.id));
+      if(newCourses.length === 0){
+        // No new courses, end of data
+        W.hasMore=false;
+        renderCourses();
+        const lb=document.getElementById('lmbtn');
+        if(lb){
+          lb.innerHTML='✅ All Loaded';
+          lb.disabled=true;
+          lb.style.opacity='0.6';
+        }
+        return;
+      }
       W.courses=[...W.courses,...newCourses];
       W.total=W.courses.length;
     }
-    // Pagination logic: if we got less than 10 items, no more data
-    W.hasMore=list.length>=10;
+    
+    // ✅ FIX: Only stop when list is empty, not based on count
+    W.hasMore = (list.length > 0);
+    
     renderCourses();
+    
     const lb=document.getElementById('lmbtn');
     if(lb){
-      if(W.sq){lb.style.display='none';}
-      else{
+      if(W.sq && W.sq !== ''){
+        lb.style.display='none';
+      } else {
         lb.style.display='block';
-        lb.innerHTML=W.hasMore?`Load More ↓ (${W.total})`:'✅ All Loaded';
-        lb.disabled=!W.hasMore;
+        if(!W.hasMore){
+          lb.innerHTML='✅ All Loaded';
+          lb.disabled=true;
+          lb.style.opacity='0.6';
+        } else {
+          lb.innerHTML=`Load More ↓ (${W.total} loaded)`;
+          lb.disabled=false;
+          lb.style.opacity='1';
+        }
       }
     }
-  }catch(e){if(reset)g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h3>Error</h3></div>';}
+  } catch(e){
+    console.error(e);
+    if(reset) g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h3>Error</h3><p>Failed to load courses</p></div>';
+  }
 }
 function srch(){W.sq=document.getElementById('sinp').value.trim();loadCourses(true);}
 function lmc(){if(!W.hasMore){toast('All loaded!','ok');return;}W.pg+=10;loadCourses(false);}
