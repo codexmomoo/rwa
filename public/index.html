@@ -699,7 +699,7 @@ function px(u){return'/api/proxy?url='+encodeURIComponent(u);}
 async function api(url,headers={}){
   try{
     let fu=url;
-    if(url.includes('studyuk.site')||url.includes('classx.co.in')){fu=px(url);headers={};}
+    if(url.includes('studyuk.site')||url.includes('classx.co.in')||url.includes('teachx.in')){fu=px(url);headers={};}
     const r=await fetch(fu,{headers});
     const txt=await r.text();
     try{return JSON.parse(txt);}
