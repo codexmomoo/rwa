@@ -652,16 +652,15 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'DM Sans
 
 <script>
 
-// ===== CONFIG (ADMIN CONTROL) =====
+// ===== CONFIG =====
 const CONFIG = {
-  maintenance: false,           // true = maintenance mode on
+  maintenance: false,
   maintenanceMsg: "We're upgrading the platform. Back soon!",
-  notice: true,                 // true = show notice dialog on launch
+  notice: true,
   noticeTitle: "Important Update",
   noticeMsg: "Welcome to the new RWA Web Player v2.1! Join @CODEXUPDATEZ for updates.",
   noticeDismissable: true,
 };
-
 
 // ===== LOGGER =====
 function log(m,t='info'){t==='error'?console.error(m):console.log(m);}
@@ -846,7 +845,7 @@ function swtab(n){
   if(n===3)loadDash();
 }
 
-// ===== COURSES (FIXED - PROPER PAGINATION) =====
+// ===== COURSES (FIXED PAGINATION - WORKING LIKE SIMPLE CODE) =====
 async function loadCourses(reset){
   if(reset){
     W.pg=0;
@@ -868,24 +867,34 @@ async function loadCourses(reset){
     } else {
       const existingIds=new Set(W.courses.map(c=>c.id));
       const newCourses=list.filter(c=>!existingIds.has(c.id));
-      if(newCourses.length === 0){
-        // No new courses, end of data
-        W.hasMore=false;
+      if(newCourses.length === 0 && list.length > 0){
+        // Duplicates but still try next page
+        W.hasMore=true;
         renderCourses();
         const lb=document.getElementById('lmbtn');
-        if(lb){
-          lb.innerHTML='✅ All Loaded';
-          lb.disabled=true;
-          lb.style.opacity='0.6';
+        if(lb && !W.sq){
+          lb.style.display='block';
+          lb.innerHTML=`Load More ↓ (${W.total} loaded)`;
+          lb.disabled=false;
+          lb.style.opacity='1';
         }
-        return;
+        // Don't return, just update pg later
+      } else {
+        W.courses=[...W.courses,...newCourses];
+        W.total=W.courses.length;
       }
-      W.courses=[...W.courses,...newCourses];
-      W.total=W.courses.length;
     }
     
-    // ✅ FIX: Only stop when list is empty, not based on count
-    W.hasMore = (list.length > 0);
+    // ✅ CRITICAL FIX: Use same logic as working simple code
+    if(list.length < 10 && W.pg > 0){
+      W.hasMore=false;
+    } else if(list.length >= 10){
+      W.hasMore=true;
+    } else if(list.length === 0){
+      W.hasMore=false;
+    } else {
+      W.hasMore=true;
+    }
     
     renderCourses();
     
@@ -895,7 +904,7 @@ async function loadCourses(reset){
         lb.style.display='none';
       } else {
         lb.style.display='block';
-        if(!W.hasMore){
+        if(!W.hasMore && W.pg > 0){
           lb.innerHTML='✅ All Loaded';
           lb.disabled=true;
           lb.style.opacity='0.6';
@@ -912,10 +921,17 @@ async function loadCourses(reset){
   }
 }
 function srch(){W.sq=document.getElementById('sinp').value.trim();loadCourses(true);}
-function lmc(){if(!W.hasMore){toast('All loaded!','ok');return;}W.pg+=10;loadCourses(false);}
+function lmc(){
+  if(!W.hasMore){
+    toast('All loaded!','ok');
+    return;
+  }
+  W.pg+=10;
+  loadCourses(false);
+}
 
 const COLS=['#7c6df0','#ff6b35','#22c55e','#f59e0b','#ec4899','#06b6d4','#a78bfa','#fb923c'];
-const EM=['A','B','C','D','E','F','G','H','I','J']; // unused, kept for compat
+const EMOJ=['📚','🎯','⚡','🔥','🌟','💡','🎓','📖','🏆','🧠'];
 
 function renderCourses(){
   const g=document.getElementById('g0');
@@ -923,9 +939,9 @@ function renderCourses(){
   const favs=JSON.parse(localStorage.getItem('favs')||'{}');
   g.innerHTML=W.courses.map((c,i)=>{
     const nm=c.course_name||c.name||`Course ${i+1}`,id=c.id||i,img=c.course_thumbnail||c.image||'';
-    const col=COLS[i%COLS.length],em=EM[i%EM.length],isFav=!!favs[id];
+    const col=COLS[i%COLS.length],em=EMOJ[i%EMOJ.length],isFav=!!favs[id];
     return`<div class="cc" onclick="openSubj('${id}','${esc(nm)}')">`+
-      (img?`<img class="cimg" src="${esc(img)}" loading="lazy" onerror="this.parentElement.querySelector('.cph').style.display='flex';this.style.display='none'">`+`<div class="cph" style="display:none">${svgPh(col,nm)}</div>`:`<div class="cph">${svgPh(col,nm)}</div>`)+
+      (img?`<img class="cimg" src="${esc(img)}" loading="lazy" onerror="this.parentElement.querySelector('.cph').style.display='flex';this.style.display='none'">`+`<div class="cph" style="display:none"><div style="background:${col}22;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:${col}">${em}</div></div>`:`<div class="cph"><div style="background:${col}22;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:${col}">${em}</div></div>`)+
       `<button class="fav-btn ${isFav?'active':''}" onclick="event.stopPropagation();togFav('${id}','${esc(nm)}','${esc(img)}',this)"><svg viewBox='0 0 24 24' width='16' height='16' stroke='currentColor' stroke-width='2' fill='${isFav?'currentColor':'none'}'><path d='M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z'/></svg></button>`+
       `<div class="cbody"><div class="cico" style="background:${col}22;color:${col}">${em}</div><div><div class="cnm">${esc(nm)}</div><div class="cmeta">Tap to explore</div></div><div class="carrow">›</div></div></div>`;
   }).join('');
@@ -941,7 +957,7 @@ function loadFavs(){
   const g=document.getElementById('g2');
   if(!favs.length){g.innerHTML='<div class="empty"><div class="ei">🤍</div><h3>No Saved Courses</h3></div>';return;}
   g.innerHTML=favs.map((c,i)=>`<div class="cc" onclick="openSubj('${esc(c.id)}','${esc(c.name)}')">`+
-    (c.img?`<img class="cimg" src="${esc(c.img)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="cph">${svgPh(COLS[i%COLS.length],c.name)}</div>`)+
+    (c.img?`<img class="cimg" src="${esc(c.img)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="cph">${EMOJ[i%EMOJ.length]}</div>`)+
     `<div class="cbody"><div class="cnm">${esc(c.name)}</div><div class="carrow">›</div></div></div>`).join('');
 }
 
@@ -959,9 +975,9 @@ function renderBatches(list){
   if(!list.length){g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div><h3>No Batches</h3></div>';return;}
   g.innerHTML=list.map((c,i)=>{
     const nm=c.course_name||c.name||`Batch ${i+1}`,id=c.id||i,img=c.course_thumbnail||c.image||'';
-    const col=COLS[i%COLS.length],em=EM[i%EM.length];
+    const col=COLS[i%COLS.length],em=EMOJ[i%EMOJ.length];
     return`<div class="cc" onclick="openSubj('${id}','${esc(nm)}')">`+
-      (img?`<img class="cimg" src="${esc(img)}" loading="lazy" onerror="this.parentElement.querySelector('.cph').style.display='flex';this.style.display='none'">`+`<div class="cph" style="display:none">${svgPh(col,nm)}</div>`:`<div class="cph">${svgPh(col,nm)}</div>`)+
+      (img?`<img class="cimg" src="${esc(img)}" loading="lazy" onerror="this.parentElement.querySelector('.cph').style.display='flex';this.style.display='none'">`+`<div class="cph" style="display:none"><div style="background:${col}22;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:${col}">${em}</div></div>`:`<div class="cph"><div style="background:${col}22;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:${col}">${em}</div></div>`)+
       `<div class="cbody"><div class="cico" style="background:${col}22;color:${col}">${em}</div><div><div class="cnm">${esc(nm)}</div><div class="cmeta">Tap to explore</div></div><div class="carrow">›</div></div></div>`;
   }).join('');
 }
@@ -984,7 +1000,7 @@ async function openSubj(cid,cnm){
     g.innerHTML=list.map((s,i)=>{
       const nm=s.subject_name||`Subject ${i+1}`,id=s.subjectid||s.id||i,lg=s.subject_logo||s.logo||'';
       return`<div class="rc" onclick="openTopic('${id}','${esc(nm)}')">`+
-        (lg?`<img class="rimg" src="${esc(lg)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="rimgph">${svgSubj(i)}</div>`)+
+        (lg?`<img class="rimg" src="${esc(lg)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="rimgph">${SEm[i%SEm.length]}</div>`)+
         `<div class="rtxt"><div class="rnm">${esc(nm)}</div><div class="rsub">Exclusive Access</div></div><div class="rpro">PRO</div></div>`;
     }).join('');
   }catch(e){g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h3>Error</h3></div>';}
@@ -1010,7 +1026,7 @@ async function openVids(tid,tnm){
     g.innerHTML=list.map((v,i)=>{
       const nm=v.Title||v.title||v.content_name||`Video ${i+1}`,id=v.id||v.content_id||i,img=v.thumbnail||'',cid=v.course_id||W.course.id;
       return`<div class="vc" onclick="loadVdet('${id}','${esc(nm)}','${cid}')">`+
-        (img?`<img class="vth" src="${esc(img)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="vthph">${svgPlay()}</div>`)+
+        (img?`<img class="vth" src="${esc(img)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="vthph">▶️</div>`)+
         `<div class="vtxt"><div class="vnm">${esc(nm)}</div><div class="vdt">▶ Tap to play</div></div></div>`;
     }).join('');
   }catch(e){g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h3>Error</h3></div>';}
@@ -1098,7 +1114,7 @@ function switchPdf(num){
 }
 function closePdfPanel(){document.getElementById('pdfPanel').classList.add('hidden');document.getElementById('pdfFrame').src='';}
 
-// ===== LIVE (FIXED - SMOOTH PLAYBACK) =====
+// ===== LIVE =====
 async function goLive(){
   show('pgLive');const g=document.getElementById('gl');
   g.innerHTML='<div class="skel sk-r"></div><div class="skel sk-r"></div><div class="skel sk-r"></div>';
@@ -1119,7 +1135,6 @@ async function goLive(){
     }).join('');
   }catch(e){g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h3>Error</h3></div>';}
 }
-
 function playLive(url,title){
   log('Live: '+title);
   show('pgPlayer');
@@ -1195,44 +1210,12 @@ function toast(msg,t=''){
 function toastHide(){const el=document.getElementById('toast');el.className='toast';if(toastTimer){clearTimeout(toastTimer);toastTimer=null;}}
 function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
-// ===== SVG HELPERS =====
-function svgPh(color, name){
-  const initials = (name||'?').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';
-  return `<svg width="100%" height="100%" viewBox="0 0 360 120" xmlns="http://www.w3.org/2000/svg">
-    <defs><linearGradient id="g${initials}" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:${color};stop-opacity:0.25"/>
-      <stop offset="100%" style="stop-color:${color};stop-opacity:0.08"/>
-    </linearGradient></defs>
-    <rect width="360" height="120" fill="url(#g${initials})"/>
-    <rect x="0" y="0" width="4" height="120" fill="${color}" opacity="0.8"/>
-    <text x="24" y="72" font-family="system-ui,sans-serif" font-size="32" font-weight="800" fill="${color}" opacity="0.9">${initials}</text>
-    <text x="70" y="58" font-family="system-ui,sans-serif" font-size="11" fill="rgba(255,255,255,0.5)" font-weight="600" letter-spacing="2">COURSE</text>
-    <rect x="70" y="64" width="180" height="2" rx="1" fill="${color}" opacity="0.3"/>
-  </svg>`;
-}
-function svgSubj(i){
-  const colors=['#7c6df0','#ff6b35','#22c55e','#f59e0b','#ec4899','#06b6d4'];
-  const c=colors[i%colors.length];
-  return `<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-    <rect width="44" height="44" rx="22" fill="${c}" fill-opacity="0.15"/>
-    <path d="M14 16h16M14 20h12M14 24h14M14 28h10" stroke="${c}" stroke-width="2" stroke-linecap="round"/>
-  </svg>`;
-}
-function svgPlay(){
-  return `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="12" cy="12" r="10" fill="rgba(124,109,240,0.2)" stroke="rgba(124,109,240,0.4)" stroke-width="1.5"/>
-    <path d="M10 8.5l6 3.5-6 3.5V8.5z" fill="#a78bfa"/>
-  </svg>`;
-}
-
 // ===== INIT =====
 window.onload=()=>{
-  // Maintenance mode check
   if(CONFIG.maintenance){
     show('pgMaint');
     return;
   }
-  // Notice dialog
   if(CONFIG.notice){
     const lastNotice = localStorage.getItem('noticeSeen');
     if(!lastNotice || lastNotice !== CONFIG.noticeMsg){
