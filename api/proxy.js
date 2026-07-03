@@ -22,12 +22,13 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid URL' });
   }
 
-  // Allowed domains
+  // ⭐ SIRF YAHAN CHANGE KARO - studyuk.cfd ADD KARO
   const allowedDomains = [
     'transcoded-videos.classx.co.in',
     'appx-play.akamai.net.in',
     'classx.co.in',
     'studyuk.site',
+    'studyuk.cfd',      // ⭐ YEH LINE ADD KARO
     'rozgarapinew.teachx.in',
     'liveclasses.cloud-front.in',
   ];
