@@ -22,36 +22,54 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid URL' });
   }
 
-  // ⭐ SIRF YAHAN CHANGE KARO - studyuk.cfd ADD KARO
+  // Allowed domains
   const allowedDomains = [
     'transcoded-videos.classx.co.in',
     'appx-play.akamai.net.in',
     'classx.co.in',
     'studyuk.site',
-    'studyuk.cfd',      // ⭐ YEH LINE ADD KARO
+    'studyuk.cfd',
     'rozgarapinew.teachx.in',
     'liveclasses.cloud-front.in',
   ];
 
-  const urlObj = new URL(targetUrl);
-  const isAllowed = allowedDomains.some(d => urlObj.hostname.includes(d));
+  try {
+    const urlObj = new URL(targetUrl);
+    const isAllowed = allowedDomains.some(d => urlObj.hostname.includes(d));
 
-  if (!isAllowed) {
-    return res.status(403).json({ error: 'Domain not allowed' });
+    if (!isAllowed) {
+      return res.status(403).json({ error: 'Domain not allowed' });
+    }
+  } catch (e) {
+    return res.status(400).json({ error: 'Invalid URL format' });
   }
 
   try {
-    const response = await fetch(targetUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36',
-        'Referer': 'https://appx-play.akamai.net.in/',
-        'Origin': 'https://appx-play.akamai.net.in',
-        'Accept': '*/*',
-      },
-    });
+    // Build headers
+    const headers = {
+      'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36',
+      'Referer': 'https://appx-play.akamai.net.in/',
+      'Origin': 'https://appx-play.akamai.net.in',
+      'Accept': '*/*',
+    };
+
+    // Pass Authorization header from client
+    if (req.headers.authorization) {
+      headers['Authorization'] = req.headers.authorization;
+    }
+
+    // Pass Auth-Key header
+    if (req.headers['auth-key']) {
+      headers['Auth-Key'] = req.headers['auth-key'];
+    }
+
+    const response = await fetch(targetUrl, { headers });
 
     if (!response.ok) {
-      return res.status(response.status).json({ error: `Upstream error: ${response.status}` });
+      return res.status(response.status).json({ 
+        error: `Upstream error: ${response.status}`,
+        status: response.status 
+      });
     }
 
     const contentType = response.headers.get('content-type') || 'application/octet-stream';
@@ -75,7 +93,6 @@ export default async function handler(req, res) {
           segmentUrl = cleanBaseUrl + line;
         }
         
-        // Add cache buster
         const separator = segmentUrl.includes('?') ? '&' : '?';
         return proxyBase + encodeURIComponent(segmentUrl + separator + '_cb=' + Date.now());
       });
