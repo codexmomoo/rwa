@@ -19,17 +19,11 @@
 }
 *{-webkit-font-smoothing:antialiased}
 html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'DM Sans',sans-serif;overflow:hidden}
-
-/* PAGES */
 .page{position:fixed;inset:0;background:var(--bg);display:none;flex-direction:column;z-index:1}
 .page.active{display:flex!important;z-index:10}
 .page.base{display:flex!important;z-index:1}
-
-/* PAGE TRANSITIONS */
 @keyframes pgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .page.active{animation:pgIn .22s ease}
-
-/* TOPBAR */
 .tb{background:var(--surf);border-bottom:1px solid var(--bdr);padding:13px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;backdrop-filter:blur(20px)}
 .tb-l{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
 .bk{width:36px;height:36px;background:var(--card);border:1px solid var(--bdr2);border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s;color:var(--mut2)}
@@ -38,20 +32,14 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'DM Sans
 .tb-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ava{width:36px;height:36px;border-radius:50%;border:2px solid var(--acc);cursor:pointer;background:linear-gradient(135deg,var(--acc),var(--acc2));font-family:'Syne',sans-serif;font-weight:800;font-size:13px;color:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:transform .15s}
 .ava:active{transform:scale(.9)}
-
-/* SCROLL */
 .sc{flex:1;overflow-y:auto;padding:14px;padding-bottom:90px}
 .sc::-webkit-scrollbar{display:none}
-
-/* BOTTOM NAV */
 .bnav{position:fixed;bottom:0;left:0;right:0;background:var(--surf);border-top:1px solid var(--bdr);display:flex;z-index:20;backdrop-filter:blur(20px)}
 .bnt{flex:1;padding:11px 4px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;border:none;background:transparent;color:var(--mut);font-size:9px;font-family:'DM Sans',sans-serif;font-weight:600;transition:color .2s;letter-spacing:.2px;position:relative}
 .bnt.on{color:var(--acc)}
 .bnt.on::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:20px;height:2px;background:var(--acc);border-radius:2px 2px 0 0}
 .bnt svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;transition:transform .2s}
 .bnt.on svg{transform:scale(1.1)}
-
-/* LOGIN */
 #pgLogin{z-index:50;justify-content:center;align-items:center;padding:20px;overflow-y:auto;
   background:radial-gradient(ellipse 100% 60% at 10% 0%,rgba(124,109,240,.2) 0%,transparent 50%),
   radial-gradient(ellipse 60% 40% at 90% 100%,rgba(167,139,250,.12) 0%,transparent 50%),var(--bg)}
@@ -79,8 +67,6 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'DM Sans
 .emsg{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);border-radius:10px;padding:10px 13px;color:var(--err);font-size:13px;margin-top:10px;display:none;line-height:1.4}
 .emsg.on{display:block}
 #tsec{display:none}
-
-/* PROFILE SETUP */
 #pgSetup{z-index:60;justify-content:center;align-items:center;padding:24px;
   background:radial-gradient(ellipse 80% 60% at 80% 90%,rgba(124,109,240,.15) 0%,transparent 55%),var(--bg)}
 .setup-box{width:100%;max-width:400px;text-align:center}
@@ -98,8 +84,6 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'DM Sans
 .setup-info-lbl{font-size:10px;color:var(--mut2);font-weight:700;text-transform:uppercase;letter-spacing:.6px}
 .setup-info-txt{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
 .setup-cont{width:100%;padding:15px;background:linear-gradient(135deg,var(--acc),var(--acc2));border:none;border-radius:13px;color:#fff;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:18px;box-shadow:0 8px 24px rgba(124,109,240,.4);letter-spacing:.2px}
-
-/* CARDS */
 .cc{background:var(--card);border:1px solid var(--bdr);border-radius:16px;overflow:hidden;margin-bottom:12px;cursor:pointer;position:relative;transition:border-color .2s,transform .15s}
 .cc:active{border-color:var(--acc);transform:scale(.985)}
 .cimg{width:100%;height:120px;object-fit:cover;display:block;background:var(--surf)}
@@ -114,8 +98,6 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'DM Sans
 .fav-btn:active{transform:scale(.85)}
 .fav-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
 .fav-btn.active svg{stroke:var(--err);fill:var(--err)}
-
-/* ROW CARDS */
 .rc{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:13px 14px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .18s}
 .rc:active{border-color:var(--acc);background:var(--card2);transform:scale(.985)}
 .rnum{width:36px;height:36px;border-radius:10px;flex-shrink:0;background:rgba(124,109,240,.1);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--acc2)}
@@ -126,8 +108,6 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'DM Sans
 .rsub{font-size:11px;color:var(--mut2);margin-top:2px}
 .rpro{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:6px;flex-shrink:0;letter-spacing:.5px}
 .rcarrow svg{width:16px;height:16px;stroke:var(--mut);fill:none;stroke-width:2;flex-shrink:0}
-
-/* VIDEO LIST */
 .vc{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:12px;margin-bottom:10px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;transition:all .18s}
 .vc:active{border-color:var(--acc);transform:scale(.985)}
 .vth{width:90px;height:60px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--surf)}
@@ -136,8 +116,6 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'DM Sans
 .vnm{font-size:13px;font-weight:600;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .vdt{font-size:11px;color:var(--mut2);margin-top:4px;display:flex;align-items:center;gap:4px}
 .vdt svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
-
-/* PLAYER */
 #pgPlayer{background:#000;overflow:hidden}
 .player-tb{background:rgba(0,0,0,.9);border-bottom:1px solid rgba(255,255,255,.08);padding:11px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;backdrop-filter:blur(20px)}
 .player-tb .bk{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12);color:rgba(255,255,255,.7)}
@@ -156,8 +134,6 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'DM Sans
 .pact:active{background:var(--acc);border-color:var(--acc);color:#fff;transform:scale(.95)}
 .pact:disabled{opacity:.3;cursor:not-allowed}
 .pact.pri{background:linear-gradient(135deg,var(--acc),var(--acc2));border-color:transparent;color:#fff;box-shadow:0 4px 14px rgba(124,109,240,.3)}
-
-/* PDF PANEL */
 .pdf-panel{flex:1;display:flex;flex-direction:column;min-height:0;background:var(--bg)}
 .pdf-panel.hidden{display:none}
 .pdf-topbar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surf);border-bottom:1px solid var(--bdr);flex-shrink:0}
@@ -171,8 +147,6 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'DM Sans
 .pdf-close-btn:active{background:rgba(248,113,113,.15);border-color:var(--err);color:var(--err)}
 .pdf-frame-wrap{flex:1;overflow:hidden;min-height:100px}
 .pdf-frame-wrap iframe{width:100%;height:100%;border:none;background:#fff}
-
-/* QUALITY MODAL */
 .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:300;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(8px)}
 @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .modal-box{background:var(--surf);border-radius:24px 24px 0 0;width:100%;max-width:480px;border:1px solid var(--bdr2);border-bottom:none;animation:sheetUp .28s cubic-bezier(.34,1,0.64,1)}
@@ -192,8 +166,6 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'DM Sans
 .pdfbtn:disabled{opacity:.3;cursor:not-allowed}
 .mcancel{width:100%;margin-top:8px;padding:13px;background:var(--card);border:1px solid var(--bdr);border-radius:12px;color:var(--mut2);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;transition:all .15s}
 .mcancel:active{background:var(--card2)}
-
-/* NOTICE / MAINTENANCE DIALOG */
 .notice-ov{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:400;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(10px)}
 .notice-box{background:var(--surf);border:1px solid var(--bdr2);border-radius:22px;width:100%;max-width:360px;overflow:hidden;animation:popIn .35s cubic-bezier(.34,1.4,.64,1)}
 .notice-header{padding:20px 20px 0;text-align:center}
@@ -203,33 +175,23 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'DM Sans
 .notice-msg{font-size:13px;color:var(--mut2);line-height:1.6;padding:0 4px}
 .notice-footer{padding:16px 20px 20px;display:flex;gap:8px;margin-top:4px}
 .notice-ok{flex:1;padding:13px;background:linear-gradient(135deg,var(--acc),var(--acc2));border:none;border-radius:12px;color:#fff;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(124,109,240,.35)}
-
-/* MAINTENANCE PAGE */
 #pgMaint{z-index:100;justify-content:center;align-items:center;padding:30px;text-align:center;
   background:radial-gradient(ellipse 80% 50% at 50% 50%,rgba(124,109,240,.12) 0%,transparent 60%),var(--bg)}
 .maint-icon{width:80px;height:80px;border-radius:24px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
 .maint-icon svg{width:40px;height:40px;stroke:var(--warn);fill:none;stroke-width:1.8}
-
-/* LIVE PILL */
 .lpill{display:flex;align-items:center;gap:10px;background:rgba(255,107,53,.07);border:1px solid rgba(255,107,53,.2);border-radius:13px;padding:12px 14px;margin-bottom:14px;cursor:pointer;transition:all .18s}
 .lpill:active{background:rgba(255,107,53,.12);border-color:rgba(255,107,53,.35)}
 .ldot{width:8px;height:8px;background:var(--org);border-radius:50%;animation:pulse 1.4s infinite;flex-shrink:0}
 .ltxt{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--org)}
 .lpill-arr svg{width:16px;height:16px;stroke:var(--mut2);fill:none;stroke-width:2;margin-left:auto}
-
-/* SEARCH */
 .sw{display:flex;gap:8px;margin-bottom:14px}
 .si{flex:1;background:var(--card);border:1.5px solid var(--bdr2);border-radius:12px;padding:11px 14px;color:var(--txt);font-size:14px;outline:none;font-family:inherit;transition:all .2s}
 .si:focus{border-color:var(--acc);background:var(--card2)}
 .sb{background:var(--acc);border:none;border-radius:12px;padding:11px 16px;color:#fff;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
 .sb svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.5}
 .sb:active{transform:scale(.93)}
-
-/* SECTION HEADER */
 .sh{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;color:var(--mut2);text-transform:uppercase;letter-spacing:1px;margin:14px 0 10px;display:flex;align-items:center;gap:8px}
 .sh::after{content:'';flex:1;height:1px;background:var(--bdr)}
-
-/* EMPTY / SKEL / TOAST */
 .empty{text-align:center;padding:48px 20px}
 .empty-icon{width:56px;height:56px;border-radius:18px;background:var(--card2);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
 .empty-icon svg{width:28px;height:28px;stroke:var(--mut2);fill:none;stroke-width:1.8}
@@ -247,8 +209,6 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'DM Sans
 #lmbtn{display:block;width:calc(100% - 0px);padding:13px;background:var(--card);border:1px solid var(--bdr2);border-radius:13px;color:var(--acc2);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s;margin-bottom:4px;display:flex;align-items:center;justify-content:center;gap:8px}
 #lmbtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
 #lmbtn:active{background:var(--card2);border-color:var(--acc)}
-
-/* DASHBOARD */
 .dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .dcard{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:14px;transition:border-color .2s}
 .dcard.full{grid-column:1/-1}
@@ -263,24 +223,17 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'DM Sans
 .adot{width:6px;height:6px;border-radius:50%;background:var(--acc);flex-shrink:0}
 .atxt{flex:1;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--txt)}
 .atime{font-size:11px;color:var(--mut2);flex-shrink:0}
-
-/* DEV */
 .dev-card{background:linear-gradient(135deg,rgba(124,109,240,.08),rgba(167,139,250,.04));border:1px solid rgba(124,109,240,.18);border-radius:16px;padding:18px;margin-bottom:12px}
 .irow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--bdr)}
 .irow:last-child{border-bottom:none}
-
-/* SHEET */
 .sheet-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;align-items:flex-end;backdrop-filter:blur(6px)}
 .sheet-box{width:100%;background:var(--surf);border-radius:24px 24px 0 0;padding:20px;border-top:1px solid var(--bdr2);animation:sheetUp .28s cubic-bezier(.34,1,.64,1)}
 .sheet-handle{width:40px;height:4px;background:var(--bdr2);border-radius:2px;margin:0 auto 20px}
-
-/* TG POPUP */
 .tgpop{position:fixed;bottom:78px;left:14px;right:14px;background:linear-gradient(135deg,#0077b6,#0096c7);border-radius:16px;padding:13px 15px;z-index:150;display:flex;align-items:center;gap:11px;box-shadow:0 10px 32px rgba(0,118,182,.45);animation:slideUp .35s cubic-bezier(.34,1.56,.64,1)}
 .tgpop.hidden{display:none}
 .tg-join{background:#fff;color:#0077b6;border:none;border-radius:9px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;flex-shrink:0;letter-spacing:.2px}
 .tg-x{background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:9px;padding:8px 10px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .tg-x svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2.5}
-
 @keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
 @keyframes rot{to{transform:rotate(360deg)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
@@ -289,364 +242,140 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'DM Sans
 </head>
 <body>
 
-<!-- MAINTENANCE -->
 <div class="page" id="pgMaint">
-  <div class="maint-icon">
-    <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 8v4"/><circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/></svg>
-  </div>
+  <div class="maint-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 8v4"/><circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/></svg></div>
   <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:10px">Under Maintenance</h2>
   <p id="maintMsg" style="color:var(--mut2);font-size:14px;line-height:1.6;max-width:280px">We're upgrading the platform. Back soon!</p>
-  <div style="margin-top:24px;padding:10px 16px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:10px;font-size:12px;color:var(--warn)">
-    Follow <strong>@CODEXUPDATEZ</strong> for updates
-  </div>
+  <div style="margin-top:24px;padding:10px 16px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:10px;font-size:12px;color:var(--warn)">Follow <strong>@CODEXUPDATEZ</strong> for updates</div>
 </div>
 
-<!-- NOTICE DIALOG -->
 <div class="notice-ov" id="noticeOverlay">
   <div class="notice-box">
     <div class="notice-header">
-      <div class="notice-icon">
-        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      </div>
+      <div class="notice-icon"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
       <div class="notice-title" id="noticeTitle">Notice</div>
       <div class="notice-msg" id="noticeMsg">Loading...</div>
     </div>
-    <div class="notice-footer">
-      <button class="notice-ok" onclick="closeNotice()">Got it</button>
-    </div>
+    <div class="notice-footer"><button class="notice-ok" onclick="closeNotice()">Got it</button></div>
   </div>
 </div>
 
-<!-- LOGIN -->
 <div class="page" id="pgLogin">
 <div class="lb">
-  <div class="brand">
-    <div class="blogo">RWA</div>
-    <h1>Rojgar <span>With Ankit</span></h1>
-    <p>Unofficial Web Player</p>
-  </div>
-  <div class="login-hint">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-    <p>Use your <strong>RWA App credentials</strong> to login. Same email/password as the official Rojgar With Ankit mobile app.</p>
-  </div>
+  <div class="brand"><div class="blogo">RWA</div><h1>Rojgar <span>With Ankit</span></h1><p>Unofficial Web Player</p></div>
+  <div class="login-hint"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p>Use your <strong>RWA App credentials</strong> to login. Same email/password as the official Rojgar With Ankit mobile app.</p></div>
   <div class="lcard">
-    <div class="ltabs">
-      <button class="ltab on" onclick="stab('email')">Email Login</button>
-      <button class="ltab" onclick="stab('token')">Token Login</button>
-    </div>
-    <div id="esec">
-      <div class="ig"><label>Email / Phone</label><input type="text" id="iem" placeholder="your@email.com" autocomplete="email"></div>
-      <div class="ig"><label>Password</label><input type="password" id="ipass" placeholder="Your RWA password" autocomplete="current-password"></div>
-    </div>
-    <div id="tsec">
-      <div class="ig"><label>Auth Token</label><input type="text" id="itok" placeholder="Paste your token here..."></div>
-    </div>
+    <div class="ltabs"><button class="ltab on" onclick="stab('email')">Email Login</button><button class="ltab" onclick="stab('token')">Token Login</button></div>
+    <div id="esec"><div class="ig"><label>Email / Phone</label><input type="text" id="iem" placeholder="your@email.com" autocomplete="email"></div><div class="ig"><label>Password</label><input type="password" id="ipass" placeholder="Your RWA password" autocomplete="current-password"></div></div>
+    <div id="tsec"><div class="ig"><label>Auth Token</label><input type="text" id="itok" placeholder="Paste your token here..."></div></div>
     <button class="lbtn" id="lbtn" onclick="doLogin()"><span id="lbi">Sign In</span></button>
     <div class="emsg" id="emsg"></div>
   </div>
 </div>
 </div>
 
-<!-- PROFILE SETUP -->
 <div class="page" id="pgSetup">
 <div class="setup-box">
   <div class="setup-avatar" id="setupAva">S</div>
   <h2>Welcome, <span id="setupName">Student</span></h2>
   <p>Your account is verified and ready.<br>Let's start learning.</p>
   <div class="setup-card">
-    <div class="setup-info-row">
-      <div class="setup-info-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-      <div class="setup-info-val">
-        <div class="setup-info-lbl">Full Name</div>
-        <div class="setup-info-txt" id="setupNameTxt">—</div>
-      </div>
-    </div>
-    <div class="setup-info-row">
-      <div class="setup-info-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
-      <div class="setup-info-val">
-        <div class="setup-info-lbl">Email</div>
-        <div class="setup-info-txt" id="setupEmailTxt">—</div>
-      </div>
-    </div>
-    <div class="setup-info-row">
-      <div class="setup-info-icon"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-      <div class="setup-info-val">
-        <div class="setup-info-lbl">Status</div>
-        <div class="setup-info-txt" style="color:var(--ok)">Verified Account</div>
-      </div>
-    </div>
+    <div class="setup-info-row"><div class="setup-info-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="setup-info-val"><div class="setup-info-lbl">Full Name</div><div class="setup-info-txt" id="setupNameTxt">—</div></div></div>
+    <div class="setup-info-row"><div class="setup-info-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div class="setup-info-val"><div class="setup-info-lbl">Email</div><div class="setup-info-txt" id="setupEmailTxt">—</div></div></div>
+    <div class="setup-info-row"><div class="setup-info-icon"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="setup-info-val"><div class="setup-info-lbl">Status</div><div class="setup-info-txt" style="color:var(--ok)">Verified Account</div></div></div>
   </div>
   <button class="setup-cont" onclick="goHome()">Continue to Dashboard</button>
 </div>
 </div>
 
-<!-- HOME -->
 <div class="page base" id="pgHome">
-  <div class="tb">
-    <div class="tb-title" id="htitle">Rojgar With Ankit</div>
-    <div class="ava" id="avabtn" onclick="gotoSheet()">S</div>
-  </div>
+  <div class="tb"><div class="tb-title" id="htitle">Rojgar With Ankit</div><div class="ava" id="avabtn" onclick="gotoSheet()">S</div></div>
   <div id="t0" class="sc">
-    <div class="sw">
-      <input class="si" id="sinp" placeholder="Search courses..." oninput="srch(this.value)" autocomplete="off">
-      <button class="sb" onclick="srch(document.getElementById('sinp').value)">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </button>
-    </div>
-    <div class="sh">All Courses</div>
-    <div id="g0"></div>
-    <button id="lmbtn" onclick="lmc()">
-      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-      Load More
-    </button>
+    <div class="sw"><input class="si" id="sinp" placeholder="Search courses..." oninput="srch(this.value)" autocomplete="off"><button class="sb" onclick="srch(document.getElementById('sinp').value)"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button></div>
+    <div class="sh">All Courses</div><div id="g0"></div>
+    <button id="lmbtn" onclick="lmc()"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>Load More</button>
   </div>
   <div id="t1" class="sc" style="display:none">
     <div class="sw"><input class="si" id="bsinp" placeholder="Search batches..." oninput="fbatch(this.value)" autocomplete="off"></div>
-    <div class="sh">My Batches</div>
-    <div id="g1"></div>
+    <div class="sh">My Batches</div><div id="g1"></div>
   </div>
-  <div id="t2" class="sc" style="display:none">
-    <div class="sh">Saved Courses</div>
-    <div id="g2"></div>
-  </div>
+  <div id="t2" class="sc" style="display:none"><div class="sh">Saved Courses</div><div id="g2"></div></div>
   <div id="t3" class="sc" style="display:none">
     <div style="display:flex;align-items:center;gap:14px;padding:16px;background:var(--card);border:1px solid var(--bdr);border-radius:16px;margin-bottom:4px">
       <div id="pava" style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:#fff;border:2px solid rgba(124,109,240,.4);flex-shrink:0">S</div>
-      <div style="flex:1;min-width:0">
-        <div id="pname" style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700">Student</div>
-        <div id="pemail" style="font-size:12px;color:var(--mut2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">—</div>
-        <div style="display:inline-flex;align-items:center;gap:4px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.18);border-radius:6px;padding:2px 8px;font-size:10px;color:var(--ok);font-weight:700;margin-top:5px;letter-spacing:.3px">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-          ACTIVE
-        </div>
-      </div>
+      <div style="flex:1;min-width:0"><div id="pname" style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700">Student</div><div id="pemail" style="font-size:12px;color:var(--mut2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">—</div><div style="display:inline-flex;align-items:center;gap:4px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.18);border-radius:6px;padding:2px 8px;font-size:10px;color:var(--ok);font-weight:700;margin-top:5px;letter-spacing:.3px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>ACTIVE</div></div>
     </div>
     <div class="sh">Study Dashboard</div>
-    <div class="dash-grid">
-      <div class="dcard"><div class="dval" id="statToday">0m</div><div class="dlbl">Today</div></div>
-      <div class="dcard"><div class="dval" id="statTotal">0m</div><div class="dlbl">Total Time</div></div>
-      <div class="dcard"><div class="dval" id="statVids">0</div><div class="dlbl">Videos</div></div>
-      <div class="dcard"><div class="dval" id="statStreak">0×</div><div class="dlbl">Day Streak</div></div>
-      <div class="dcard full">
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-          <span style="font-size:10px;font-weight:700;color:var(--mut2);text-transform:uppercase;letter-spacing:.8px">Weekly Progress</span>
-          <span style="font-size:11px;color:var(--acc2);font-weight:600" id="weekLbl">0 / 7 days</span>
-        </div>
-        <div class="sbar" id="sbar"></div>
-      </div>
-    </div>
+    <div class="dash-grid"><div class="dcard"><div class="dval" id="statToday">0m</div><div class="dlbl">Today</div></div><div class="dcard"><div class="dval" id="statTotal">0m</div><div class="dlbl">Total Time</div></div><div class="dcard"><div class="dval" id="statVids">0</div><div class="dlbl">Videos</div></div><div class="dcard"><div class="dval" id="statStreak">0×</div><div class="dlbl">Day Streak</div></div><div class="dcard full"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:10px;font-weight:700;color:var(--mut2);text-transform:uppercase;letter-spacing:.8px">Weekly Progress</span><span style="font-size:11px;color:var(--acc2);font-weight:600" id="weekLbl">0 / 7 days</span></div><div class="sbar" id="sbar"></div></div></div>
     <div class="sh">Recent Activity</div>
-    <div class="dcard" id="actList" style="margin-bottom:14px">
-      <div style="text-align:center;padding:18px;color:var(--mut2);font-size:13px">Start watching to see activity</div>
-    </div>
+    <div class="dcard" id="actList" style="margin-bottom:14px"><div style="text-align:center;padding:18px;color:var(--mut2);font-size:13px">Start watching to see activity</div></div>
     <div class="sh">Account</div>
-    <button onclick="logout()" style="width:100%;padding:13px;background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.18);border-radius:13px;color:var(--err);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-      Logout
-    </button>
-    <button onclick="swtab(4)" style="width:100%;padding:13px;background:rgba(124,109,240,.07);border:1px solid rgba(124,109,240,.18);border-radius:13px;color:var(--acc2);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-      About Developer
-    </button>
+    <button onclick="logout()" style="width:100%;padding:13px;background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.18);border-radius:13px;color:var(--err);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</button>
+    <button onclick="swtab(4)" style="width:100%;padding:13px;background:rgba(124,109,240,.07);border:1px solid rgba(124,109,240,.18);border-radius:13px;color:var(--acc2);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>About Developer</button>
   </div>
   <div id="t4" class="sc" style="display:none">
     <div class="dev-card">
-      <div style="width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,var(--acc),var(--acc2));display:flex;align-items:center;justify-content:center;margin-bottom:14px;box-shadow:0 8px 24px rgba(124,109,240,.3)">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>
-      </div>
+      <div style="width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,var(--acc),var(--acc2));display:flex;align-items:center;justify-content:center;margin-bottom:14px;box-shadow:0 8px 24px rgba(124,109,240,.3)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg></div>
       <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;background:linear-gradient(135deg,var(--acc2),#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px">@CODEXMOMO</div>
       <div style="font-size:12px;color:var(--mut2);margin-bottom:16px">Full Stack Developer • Android Modder</div>
-      <div style="display:flex;gap:8px">
-        <a href="https://t.me/II_N0T_Y0UR_TYPE_ll" target="_blank" style="flex:1;padding:10px;border-radius:11px;border:1px solid var(--bdr2);background:var(--card);color:var(--txt);font-size:12px;font-weight:600;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          Telegram
-        </a>
-        <a href="https://ig.me/m/codexmomo" target="_blank" style="flex:1;padding:10px;border-radius:11px;border:1px solid var(--bdr2);background:var(--card);color:var(--txt);font-size:12px;font-weight:600;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px">
-         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-  <rect x="2" y="2" width="20" height="20" rx="5"/>
-  <circle cx="12" cy="12" r="4.5"/>
-  <circle cx="17.5" cy="6.5" r="1.5"/>
-</svg>
-          Instagram
-        </a>
-      </div>
+      <div style="display:flex;gap:8px"><a href="https://t.me/II_N0T_Y0UR_TYPE_ll" target="_blank" style="flex:1;padding:10px;border-radius:11px;border:1px solid var(--bdr2);background:var(--card);color:var(--txt);font-size:12px;font-weight:600;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Telegram</a><a href="https://ig.me/m/codexmomo" target="_blank" style="flex:1;padding:10px;border-radius:11px;border:1px solid var(--bdr2);background:var(--card);color:var(--txt);font-size:12px;font-weight:600;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.5" cy="6.5" r="1.5"/></svg>Instagram</a></div>
     </div>
     <div class="sh">App Info</div>
-    <div class="dcard" style="margin-bottom:12px">
-      <div class="irow"><span style="font-size:13px;color:var(--mut2)">Version</span><span style="font-size:13px;font-weight:700">v2.1.0</span></div>
-      <div class="irow"><span style="font-size:13px;color:var(--mut2)">Platform</span><span style="font-size:13px;font-weight:700">Web PWA</span></div>
-      <div class="irow"><span style="font-size:13px;color:var(--mut2)">Hosted</span><span style="font-size:13px;font-weight:700">Vercel</span></div>
-      <div class="irow"><span style="font-size:13px;color:var(--mut2)">Developer</span><span style="font-size:13px;font-weight:700">@CODEXMOMO</span></div>
-    </div>
-    <div onclick="window.open('https://t.me/CODEXUPDATEZ','_blank')" style="background:linear-gradient(135deg,rgba(0,119,182,.14),rgba(0,150,199,.07));border:1px solid rgba(0,119,182,.28);border-radius:14px;padding:15px;cursor:pointer;display:flex;align-items:center;gap:12px">
-      <div style="width:40px;height:40px;border-radius:12px;background:rgba(0,119,182,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0096c7" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-      </div>
-      <div style="flex:1"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px">@CODEXUPDATEZ</div><div style="font-size:12px;color:var(--mut2);margin-top:2px">Join for updates & mods</div></div>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--mut2)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-    </div>
+    <div class="dcard" style="margin-bottom:12px"><div class="irow"><span style="font-size:13px;color:var(--mut2)">Version</span><span style="font-size:13px;font-weight:700">v2.1.0</span></div><div class="irow"><span style="font-size:13px;color:var(--mut2)">Platform</span><span style="font-size:13px;font-weight:700">Web PWA</span></div><div class="irow"><span style="font-size:13px;color:var(--mut2)">Hosted</span><span style="font-size:13px;font-weight:700">Vercel</span></div><div class="irow"><span style="font-size:13px;color:var(--mut2)">Developer</span><span style="font-size:13px;font-weight:700">@CODEXMOMO</span></div></div>
+    <div onclick="window.open('https://t.me/CODEXUPDATEZ','_blank')" style="background:linear-gradient(135deg,rgba(0,119,182,.14),rgba(0,150,199,.07));border:1px solid rgba(0,119,182,.28);border-radius:14px;padding:15px;cursor:pointer;display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:12px;background:rgba(0,119,182,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0096c7" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div><div style="flex:1"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px">@CODEXUPDATEZ</div><div style="font-size:12px;color:var(--mut2);margin-top:2px">Join for updates & mods</div></div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--mut2)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
   </div>
   <nav class="bnav">
-    <button class="bnt on" id="bn0" onclick="swtab(0)">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-      Courses
-    </button>
-    <button class="bnt" id="bn1" onclick="swtab(1)">
-      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-      Batches
-    </button>
-    <button class="bnt" id="bn2" onclick="swtab(2)">
-      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-      Saved
-    </button>
-    <button class="bnt" id="bn3" onclick="swtab(3)">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
-      Profile
-    </button>
+    <button class="bnt on" id="bn0" onclick="swtab(0)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Courses</button>
+    <button class="bnt" id="bn1" onclick="swtab(1)"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>Batches</button>
+    <button class="bnt" id="bn2" onclick="swtab(2)"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Saved</button>
+    <button class="bnt" id="bn3" onclick="swtab(3)"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>Profile</button>
   </nav>
 </div>
 
-<!-- SUBJECTS -->
 <div class="page" id="pgSubj">
-  <div class="tb">
-    <div class="tb-l">
-      <div class="bk" onclick="back('pgHome')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
-      <div class="tb-title" id="stitle">Subjects</div>
-    </div>
-  </div>
-  <div class="sc">
-    <div class="lpill" onclick="goLive()">
-      <div class="ldot"></div>
-      <span class="ltxt">Live Classes</span>
-      <div class="lpill-arr" style="margin-left:auto"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
-    </div>
-    <div class="sh">All Subjects</div>
-    <div id="gs"></div>
-  </div>
+  <div class="tb"><div class="tb-l"><div class="bk" onclick="back('pgHome')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="tb-title" id="stitle">Subjects</div></div></div>
+  <div class="sc"><div class="lpill" onclick="goLive()"><div class="ldot"></div><span class="ltxt">Live Classes</span><div class="lpill-arr" style="margin-left:auto"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div></div><div class="sh">All Subjects</div><div id="gs"></div></div>
 </div>
 
-<!-- TOPICS -->
 <div class="page" id="pgTopic">
-  <div class="tb">
-    <div class="tb-l">
-      <div class="bk" onclick="back('pgSubj')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
-      <div class="tb-title" id="ttitle">Topics</div>
-    </div>
-  </div>
+  <div class="tb"><div class="tb-l"><div class="bk" onclick="back('pgSubj')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="tb-title" id="ttitle">Topics</div></div></div>
   <div class="sc"><div class="sh">All Topics</div><div id="gt"></div></div>
 </div>
 
-<!-- VIDEOS -->
 <div class="page" id="pgVid">
-  <div class="tb">
-    <div class="tb-l">
-      <div class="bk" onclick="back('pgTopic')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
-      <div class="tb-title" id="vtitle">Videos</div>
-    </div>
-  </div>
+  <div class="tb"><div class="tb-l"><div class="bk" onclick="back('pgTopic')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="tb-title" id="vtitle">Videos</div></div></div>
   <div class="sc"><div class="sh">All Content</div><div id="gv"></div></div>
 </div>
 
-<!-- PLAYER -->
 <div class="page" id="pgPlayer">
-  <div class="player-tb">
-    <div class="bk" onclick="closePlayer()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
-    <div class="tb-title" style="color:#fff" id="ptbar">Video</div>
-    <button onclick="toggleFavVideo()" id="favVidBtn" style="background:transparent;border:none;cursor:pointer;padding:6px;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:.15s">
-      <svg id="favVidSvg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-    </button>
-  </div>
-  <div class="video-wrap">
-    <video id="vplayer" controls playsinline style="width:100%;display:block;max-height:240px;background:#000"></video>
-  </div>
+  <div class="player-tb"><div class="bk" onclick="closePlayer()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="tb-title" style="color:#fff" id="ptbar">Video</div><button onclick="toggleFavVideo()" id="favVidBtn" style="background:transparent;border:none;cursor:pointer;padding:6px;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:.15s"><svg id="favVidSvg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button></div>
+  <div class="video-wrap"><video id="vplayer" controls playsinline style="width:100%;display:block;max-height:240px;background:#000"></video></div>
   <div class="player-body">
-    <div class="player-info">
-      <div class="player-title" id="ptitle">Fetching...</div>
-      <div class="player-date" id="pdate">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        <span id="pdateText">—</span>
-      </div>
-      <div class="player-acts">
-        <button class="pact pri" onclick="showQPicker()">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-          Quality
-        </button>
-        <button class="pact" id="pb1" onclick="openPdf(1)" disabled>
-          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          Notes
-        </button>
-        <button class="pact" id="pb2" onclick="openPdf(2)" disabled>
-          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          DPP
-        </button>
-      </div>
-    </div>
+    <div class="player-info"><div class="player-title" id="ptitle">Fetching...</div><div class="player-date" id="pdate"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span id="pdateText">—</span></div><div class="player-acts"><button class="pact pri" onclick="showQPicker()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>Quality</button><button class="pact" id="pb1" onclick="openPdf(1)" disabled><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Notes</button><button class="pact" id="pb2" onclick="openPdf(2)" disabled><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>DPP</button></div></div>
     <div class="pdf-panel hidden" id="pdfPanel">
-      <div class="pdf-topbar">
-        <div class="pdf-tabs-wrap">
-          <button class="pdftab on" id="pdfT1" onclick="switchPdf(1)">
-            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-            Notes
-          </button>
-          <button class="pdftab" id="pdfT2" onclick="switchPdf(2)">
-            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
-            DPP
-          </button>
-        </div>
-        <div class="pdf-close-btn" onclick="closePdfPanel()">
-          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </div>
-      </div>
-      <div class="pdf-frame-wrap">
-        <iframe id="pdfFrame" src=""></iframe>
-      </div>
+      <div class="pdf-topbar"><div class="pdf-tabs-wrap"><button class="pdftab on" id="pdfT1" onclick="switchPdf(1)"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Notes</button><button class="pdftab" id="pdfT2" onclick="switchPdf(2)"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>DPP</button></div><div class="pdf-close-btn" onclick="closePdfPanel()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div>
+      <div class="pdf-frame-wrap"><iframe id="pdfFrame" src=""></iframe></div>
     </div>
   </div>
 </div>
 
-<!-- LIVE -->
 <div class="page" id="pgLive">
-  <div class="tb">
-    <div class="tb-l">
-      <div class="bk" onclick="back('pgSubj')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
-      <div class="tb-title">Live Classes</div>
-    </div>
-  </div>
+  <div class="tb"><div class="tb-l"><div class="bk" onclick="back('pgSubj')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="tb-title">Live Classes</div></div></div>
   <div class="sc"><div id="gl"></div></div>
 </div>
 
-<!-- PROFILE SHEET -->
 <div class="sheet-ov" id="sheetOv" onclick="closeSheet(event)">
   <div class="sheet-box">
     <div class="sheet-handle"></div>
-    <div style="display:flex;align-items:center;gap:13px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--bdr)">
-      <div id="sava" style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:#fff;border:2px solid rgba(124,109,240,.35)">S</div>
-      <div style="flex:1;min-width:0">
-        <div id="snm" style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px">Student</div>
-        <div id="sem" style="font-size:12px;color:var(--mut2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">—</div>
-      </div>
-    </div>
-    <div onclick="window.open('https://t.me/CODEXUPDATEZ','_blank');closeSheetDirect()" style="background:rgba(0,119,182,.1);border:1px solid rgba(0,119,182,.25);border-radius:12px;padding:13px;cursor:pointer;display:flex;align-items:center;gap:10px;margin-bottom:10px">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0096c7" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-      <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px">Join @CODEXUPDATEZ</span>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--mut2)" stroke-width="2" style="margin-left:auto"><polyline points="9 18 15 12 9 6"/></svg>
-    </div>
-    <button onclick="logout()" style="width:100%;padding:13px;background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.18);border-radius:12px;color:var(--err);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-      Logout
-    </button>
+    <div style="display:flex;align-items:center;gap:13px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--bdr)"><div id="sava" style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:#fff;border:2px solid rgba(124,109,240,.35)">S</div><div style="flex:1;min-width:0"><div id="snm" style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px">Student</div><div id="sem" style="font-size:12px;color:var(--mut2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">—</div></div></div>
+    <div onclick="window.open('https://t.me/CODEXUPDATEZ','_blank');closeSheetDirect()" style="background:rgba(0,119,182,.1);border:1px solid rgba(0,119,182,.25);border-radius:12px;padding:13px;cursor:pointer;display:flex;align-items:center;gap:10px;margin-bottom:10px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0096c7" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px">Join @CODEXUPDATEZ</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--mut2)" stroke-width="2" style="margin-left:auto"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <button onclick="logout()" style="width:100%;padding:13px;background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.18);border-radius:12px;color:var(--err);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</button>
   </div>
 </div>
 
-<!-- TG POPUP -->
 <div class="tgpop hidden" id="tgPop">
-  <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-  </div>
-  <div style="flex:1;min-width:0">
-    <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff">@CODEXUPDATEZ</div>
-    <div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:1px">Join for updates & mods</div>
-  </div>
+  <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
+  <div style="flex:1;min-width:0"><div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff">@CODEXUPDATEZ</div><div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:1px">Join for updates & mods</div></div>
   <button class="tg-join" onclick="window.open('https://t.me/CODEXUPDATEZ','_blank');hideTg()">Join</button>
   <button class="tg-x" onclick="hideTg()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
 </div>
@@ -664,11 +393,10 @@ const CONFIG = {
   noticeDismissable: true,
 };
 
-// ===== LOGGER =====
 function log(m,t='info'){t==='error'?console.error(m):console.log(m);}
 
 // =============================================
-// 🔥 NEW API - SAB PROXY SE, DOMAIN HIDDEN 🔥
+// 🔥 API - SAB PROXY SE, DOMAIN HIDDEN 🔥
 // =============================================
 const API = {
   login: '/api/proxy?url=' + encodeURIComponent('https://studyuk.cfd/rwa/login.php/credential-login?email='),
@@ -681,7 +409,7 @@ const API = {
   live: '/api/proxy?url=' + encodeURIComponent('https://studyuk.cfd/rwaapi/index.php?endpoint=live&token='),
 };
 
-// ===== NEW API CALL FUNCTION =====
+// ===== API CALL FUNCTION =====
 async function api(endpoint, extraParams = {}, headers = {}) {
   try {
     let finalUrl = endpoint;
@@ -689,7 +417,14 @@ async function api(endpoint, extraParams = {}, headers = {}) {
       const qs = new URLSearchParams(extraParams).toString();
       finalUrl += (endpoint.includes('?') ? '&' : '?') + qs;
     }
-    const r = await fetch(finalUrl, { headers });
+    const finalHeaders = { ...headers };
+    const tok = gat();
+    if (tok && (endpoint.includes('batch') || endpoint.includes('live') || endpoint.includes('vdet'))) {
+      finalHeaders['Authorization'] = 'Bearer ' + tok;
+      finalHeaders['Client-Service'] = 'Appx';
+      finalHeaders['Auth-Key'] = 'appxapi';
+    }
+    const r = await fetch(finalUrl, { headers: finalHeaders });
     const txt = await r.text();
     try { return JSON.parse(txt); } 
     catch { return { error: 'Invalid JSON' }; }
@@ -709,12 +444,10 @@ localStorage.setItem('aid',W.aid);
 
 let hls=null,cvd=null,vsTime=null,stTimer=null;
 
-// ===== HELPERS =====
 function gat(){return W.tok?W.tok.replace('~@SDV_BOTX','').trim():'';}
 function th(){return{'Client-Service':'Appx','source':'website','Auth-Key':'appxapi','Authorization':gat()};}
 function px(u){return'/api/proxy?url='+encodeURIComponent(u);}
 
-// ===== STUDY TRACKER =====
 function gsd(){return JSON.parse(localStorage.getItem('sd')||'{"today":0,"total":0,"vids":0,"streak":0,"last":"","week":[],"acts":[]}');}
 function ssd(d){localStorage.setItem('sd',JSON.stringify(d));}
 
@@ -761,14 +494,12 @@ function loadDash(){
     :'<div style="text-align:center;padding:18px;color:var(--mut);font-size:13px">Start watching to see activity</div>';
 }
 
-// ===== TELEGRAM =====
 function showTg(){
   const l=localStorage.getItem('tgl');
   if(!l||Date.now()-parseInt(l)>3600000)setTimeout(()=>document.getElementById('tgPop').classList.remove('hidden'),4000);
 }
 function hideTg(){document.getElementById('tgPop').classList.add('hidden');localStorage.setItem('tgl',Date.now().toString());}
 
-// ===== NAVIGATION =====
 function show(id){
   ['pgLogin','pgSetup','pgHome','pgSubj','pgTopic','pgVid','pgPlayer','pgLive'].forEach(pid=>{
     const el=document.getElementById(pid);if(el){el.classList.remove('active');el.style.display='none';}
@@ -785,7 +516,6 @@ function closePlayer(){
   back('pgVid');
 }
 
-// ===== LOGIN =====
 function stab(m){
   W.mode=m;
   document.querySelectorAll('.ltab').forEach((b,i)=>b.classList.toggle('on',(i===0&&m==='email')||(i===1&&m==='token')));
@@ -839,7 +569,6 @@ function goHome(){
   loadProf();showTg();
 }
 
-// ===== TABS =====
 function swtab(n){
   W.tab=n;
   for(let i=0;i<5;i++){
@@ -852,7 +581,6 @@ function swtab(n){
   if(n===3)loadDash();
 }
 
-// ===== COURSES =====
 async function loadCourses(reset){
   if(reset){W.pg=0;W.courses=[];W.hasMore=true;W.total=0;}
   const g=document.getElementById('g0');
@@ -869,17 +597,10 @@ async function loadCourses(reset){
       if(newCourses.length===0&&list.length>0){W.hasMore=true;}
       else{W.courses=[...W.courses,...newCourses];W.total=W.courses.length;}
     }
-    
-    if(list.length < 10 && W.pg > 0){
-      W.hasMore = false;
-    } else if(list.length >= 10){
-      W.hasMore = true;
-    } else if(list.length === 0){
-      W.hasMore = false;
-    } else {
-      W.hasMore = true;
-    }
-
+    if(list.length < 10 && W.pg > 0){W.hasMore = false;}
+    else if(list.length >= 10){W.hasMore = true;}
+    else if(list.length === 0){W.hasMore = false;}
+    else{W.hasMore = true;}
     renderCourses();
     const lb=document.getElementById('lmbtn');
     if(lb){
@@ -943,11 +664,10 @@ function loadFavs(){
   }).join('');
 }
  
-// ===== BATCHES =====
 async function loadBatches(){
   const g=document.getElementById('g1');g.innerHTML='<div class="skel sk-c"></div><div class="skel sk-c"></div>';
   try{
-    const r = await api(API.batch, {}, { Authorization: `Bearer ${gat()}` });
+    const r = await api(API.batch);
     const list = r.data || r || [];
     if(!list.length){g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div><h3>No Batches</h3></div>';return;}
     W.batches=list;renderBatches(list);
@@ -974,7 +694,6 @@ function loadProf(){
   document.getElementById('htitle').textContent='Hi, '+nm.split(' ')[0];
 }
 
-// ===== SUBJECTS, TOPICS, VIDEOS =====
 async function openSubj(cid,cnm){
   W.course={id:cid,name:cnm};document.getElementById('stitle').textContent=cnm;show('pgSubj');
   const g=document.getElementById('gs');g.innerHTML='<div class="skel sk-r"></div><div class="skel sk-r"></div><div class="skel sk-r"></div>';
@@ -1022,7 +741,6 @@ async function openVids(tid,tnm){
   }catch(e){g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h3>Error</h3></div>';}
 }
 
-// ===== VIDEO DETAILS & PLAY =====
 async function loadVdet(vid,title,cid){
   toast('Loading...','');
   try{
@@ -1105,7 +823,6 @@ function switchPdf(num){
 }
 function closePdfPanel(){document.getElementById('pdfPanel').classList.add('hidden');document.getElementById('pdfFrame').src='';}
 
-// ===== LIVE =====
 async function goLive(){
   show('pgLive');const g=document.getElementById('gl');
   g.innerHTML='<div class="skel sk-r"></div><div class="skel sk-r"></div><div class="skel sk-r"></div>';
@@ -1141,36 +858,18 @@ function playLive(url,title){
   v.pause();v.src='';v.load();
   const streamUrl=url.includes('.m3u8')?px(url):url;
   if(window.Hls&&window.Hls.isSupported()){
-    const h=new window.Hls({
-      enableWorker:true,
-      lowLatencyMode:true,
-      liveSyncDurationCount:3,
-      liveMaxLatencyDurationCount:6,
-      maxBufferLength:30,
-      backBufferLength:20,
-      startPosition:-1
-    });
+    const h=new window.Hls({enableWorker:true,lowLatencyMode:true,liveSyncDurationCount:3,liveMaxLatencyDurationCount:6,maxBufferLength:30,backBufferLength:20,startPosition:-1});
     hls=h;
     h.loadSource(streamUrl);
     h.attachMedia(v);
     h.on(window.Hls.Events.MANIFEST_PARSED,()=>{
-      setTimeout(()=>{
-        v.play().catch(e=>log('Live play err: '+e.message,'error'));
-        startTimer();
-      },300);
+      setTimeout(()=>{v.play().catch(e=>log('Live play err: '+e.message,'error'));startTimer();},300);
     });
     h.on(window.Hls.Events.ERROR,(evt,data)=>{
       if(data.fatal){
-        if(data.type===window.Hls.ErrorTypes.NETWORK_ERROR){
-          log('Network error, retrying...','error');
-          h.startLoad();
-        }else if(data.type===window.Hls.ErrorTypes.MEDIA_ERROR){
-          log('Media error, recovering...','error');
-          h.recoverMediaError();
-        }else{
-          h.destroy();
-          toast('Live stream error','er');
-        }
+        if(data.type===window.Hls.ErrorTypes.NETWORK_ERROR){log('Network error, retrying...','error');h.startLoad();}
+        else if(data.type===window.Hls.ErrorTypes.MEDIA_ERROR){log('Media error, recovering...','error');h.recoverMediaError();}
+        else{h.destroy();toast('Live stream error','er');}
       }
     });
   }else{
@@ -1180,7 +879,6 @@ function playLive(url,title){
   }
 }
 
-// ===== MISC =====
 function gotoSheet(){document.getElementById('sheetOv').style.display='flex';}
 function closeSheet(e){if(e.target===document.getElementById('sheetOv'))document.getElementById('sheetOv').style.display='none';}
 function closeSheetDirect(){document.getElementById('sheetOv').style.display='none';}
@@ -1201,7 +899,6 @@ function toast(msg,t=''){
 function toastHide(){const el=document.getElementById('toast');el.className='toast';if(toastTimer){clearTimeout(toastTimer);toastTimer=null;}}
 function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
-// ===== INIT =====
 window.onload=()=>{
   if(CONFIG.maintenance){show('pgMaint');return;}
   if(CONFIG.notice){
