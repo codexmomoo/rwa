@@ -1,6 +1,5 @@
 // Vercel Serverless Function - HLS Video Proxy
 export default async function handler(req, res) {
-  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', '*');
@@ -22,7 +21,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid URL' });
   }
 
-  // Allowed domains
   const allowedDomains = [
     'transcoded-videos.classx.co.in',
     'appx-play.akamai.net.in',
@@ -45,7 +43,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Build headers
     const headers = {
       'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36',
       'Referer': 'https://appx-play.akamai.net.in/',
@@ -53,12 +50,9 @@ export default async function handler(req, res) {
       'Accept': '*/*',
     };
 
-    // Pass Authorization header from client
     if (req.headers.authorization) {
       headers['Authorization'] = req.headers.authorization;
     }
-
-    // Pass Auth-Key header
     if (req.headers['auth-key']) {
       headers['Auth-Key'] = req.headers['auth-key'];
     }
@@ -74,14 +68,12 @@ export default async function handler(req, res) {
 
     const contentType = response.headers.get('content-type') || 'application/octet-stream';
 
-    // M3U8 file - segment URLs ko proxy karo
     if (targetUrl.includes('.m3u8') || contentType.includes('mpegurl')) {
       let text = await response.text();
       const baseUrl = targetUrl.substring(0, targetUrl.lastIndexOf('/') + 1);
       const proxyBase = '/api/proxy?url=';
       const cleanBaseUrl = baseUrl.split('?')[0];
 
-      // Rewrite segment URLs
       text = text.replace(/^(?!#)([^\r\n]+)$/gm, (line) => {
         line = line.trim();
         if (!line) return line;
@@ -97,7 +89,6 @@ export default async function handler(req, res) {
         return proxyBase + encodeURIComponent(segmentUrl + separator + '_cb=' + Date.now());
       });
 
-      // Rewrite key URIs
       text = text.replace(/URI="([^"]+)"/g, (match, uri) => {
         let keyUrl;
         if (uri.startsWith('http://') || uri.startsWith('https://')) {
@@ -113,7 +104,6 @@ export default async function handler(req, res) {
       return res.status(200).send(text);
     }
 
-    // Video segments (.ts files)
     let finalContentType = contentType;
     if (targetUrl.includes('.ts')) {
       finalContentType = 'video/mp2t';
