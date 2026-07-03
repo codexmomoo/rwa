@@ -667,19 +667,34 @@ const CONFIG = {
 // ===== LOGGER =====
 function log(m,t='info'){t==='error'?console.error(m):console.log(m);}
 
-// ===== API =====
-const TX='https://rozgarapinew.teachx.in/get', SDV='https://studyuk.cfd';  // ✅ Yahan change
-
-const API={
-  login:`${SDV}/rwa/login.php/credential-login?email=`,
-  courses:`${TX}/courselist?start=`,
-  batch:`${SDV}/rwaapi/my-batch.php`,
-  subj:`${TX}/allsubjectfrmlivecourseclass?courseid=`,
-  topic:`${TX}/alltopicfrmlivecourseclass?courseid=`,
-  vlist:`${TX}/livecourseclassbycoursesubtopconceptapiv3?courseid=`,
-  vdet:`${SDV}/rwaapi/index.php?endpoint=video-details&token=`,
-  live:`${SDV}/rwaapi/index.php?endpoint=live&token=`,
+// =============================================
+// 🔥 NEW API - SAB PROXY SE, DOMAIN HIDDEN 🔥
+// =============================================
+const API = {
+  login: '/api/proxy?url=' + encodeURIComponent('https://studyuk.cfd/rwa/login.php/credential-login?email='),
+  courses: '/api/proxy?url=' + encodeURIComponent('https://rozgarapinew.teachx.in/get/courselist?start='),
+  batch: '/api/proxy?url=' + encodeURIComponent('https://studyuk.cfd/rwaapi/my-batch.php'),
+  subj: '/api/proxy?url=' + encodeURIComponent('https://rozgarapinew.teachx.in/get/allsubjectfrmlivecourseclass?courseid='),
+  topic: '/api/proxy?url=' + encodeURIComponent('https://rozgarapinew.teachx.in/get/alltopicfrmlivecourseclass?courseid='),
+  vlist: '/api/proxy?url=' + encodeURIComponent('https://rozgarapinew.teachx.in/get/livecourseclassbycoursesubtopconceptapiv3?courseid='),
+  vdet: '/api/proxy?url=' + encodeURIComponent('https://studyuk.cfd/rwaapi/index.php?endpoint=video-details&token='),
+  live: '/api/proxy?url=' + encodeURIComponent('https://studyuk.cfd/rwaapi/index.php?endpoint=live&token='),
 };
+
+// ===== NEW API CALL FUNCTION =====
+async function api(endpoint, extraParams = {}, headers = {}) {
+  try {
+    let finalUrl = endpoint;
+    if (Object.keys(extraParams).length > 0) {
+      const qs = new URLSearchParams(extraParams).toString();
+      finalUrl += (endpoint.includes('?') ? '&' : '?') + qs;
+    }
+    const r = await fetch(finalUrl, { headers });
+    const txt = await r.text();
+    try { return JSON.parse(txt); } 
+    catch { return { error: 'Invalid JSON' }; }
+  } catch (e) { return { error: e.message }; }
+}
 
 // ===== STATE =====
 const W={
@@ -698,27 +713,6 @@ let hls=null,cvd=null,vsTime=null,stTimer=null;
 function gat(){return W.tok?W.tok.replace('~@SDV_BOTX','').trim():'';}
 function th(){return{'Client-Service':'Appx','source':'website','Auth-Key':'appxapi','Authorization':gat()};}
 function px(u){return'/api/proxy?url='+encodeURIComponent(u);}
-
-// ⭐ FIX: api function - teachx.in ko direct call (pehle wale code ki tarah)
-async function api(url,headers={}){
-  try{
-    let fu=url;
-    let finalHeaders = {...headers};
-    // Proxy only for studyuk.site and classx.co.in
-    if(url.includes('studyuk.site')||url.includes('classx.co.in')){
-      fu=px(url);
-      finalHeaders={};
-    }
-    // For teachx.in, keep original URL and use th() headers (no proxy)
-    else if(url.includes('teachx.in')){
-      finalHeaders = {...th(), ...headers};
-    }
-    const r=await fetch(fu,{headers:finalHeaders});
-    const txt=await r.text();
-    try{return JSON.parse(txt);}
-    catch{return{error:'Invalid JSON'};}
-  }catch(e){return{error:e.message};}
-}
 
 // ===== STUDY TRACKER =====
 function gsd(){return JSON.parse(localStorage.getItem('sd')||'{"today":0,"total":0,"vids":0,"streak":0,"last":"","week":[],"acts":[]}');}
@@ -813,7 +807,7 @@ async function doLogin(){
     }else{
       const em=document.getElementById('iem').value.trim(),pw=document.getElementById('ipass').value;
       if(!em||!pw)throw new Error('Fill fields');
-      const res=await fetch(API.login+encodeURIComponent(em)+'&password='+encodeURIComponent(pw));
+      const res=await fetch(API.login + encodeURIComponent(em) + '&password=' + encodeURIComponent(pw));
       const data=await res.json();
       if(!data.token&&!data.data?.token)throw new Error(data.message||'Login failed');
       tok=(data.token||data.data?.token||'').replace(/"/g,'').trim();
@@ -864,10 +858,10 @@ async function loadCourses(reset){
   const g=document.getElementById('g0');
   if(reset) g.innerHTML='<div class="skel sk-c"></div><div class="skel sk-c"></div><div class="skel sk-c"></div>';
   try{
-    let url=API.courses+W.pg;
-    if(W.sq) url+='&search='+encodeURIComponent(W.sq);
-    const r=await api(url,th());
-    const list=r.data||[];
+    const params = { start: W.pg };
+    if(W.sq) params.search = W.sq;
+    const r = await api(API.courses, params);
+    const list = r.data || [];
     if(reset){W.courses=list;W.total=list.length;}
     else{
       const existingIds=new Set(W.courses.map(c=>c.id));
@@ -876,7 +870,6 @@ async function loadCourses(reset){
       else{W.courses=[...W.courses,...newCourses];W.total=W.courses.length;}
     }
     
-    // ✅ EXACT logic from working emoji version
     if(list.length < 10 && W.pg > 0){
       W.hasMore = false;
     } else if(list.length >= 10){
@@ -911,7 +904,6 @@ function lmc(){if(!W.hasMore){toast('All courses loaded!','ok');return;}W.pg+=10
 
 const COLS=['#7c6df0','#ff6b35','#22c55e','#f59e0b','#ec4899','#06b6d4','#a78bfa','#fb923c'];
 
-// ⭐ Animated dot function
 function animatedDot(col) {
   return `<div style="width:14px;height:14px;border-radius:50%;background:${col};box-shadow:0 0 12px ${col};animation:pulse 1.5s infinite;"></div>`;
 }
@@ -955,7 +947,8 @@ function loadFavs(){
 async function loadBatches(){
   const g=document.getElementById('g1');g.innerHTML='<div class="skel sk-c"></div><div class="skel sk-c"></div>';
   try{
-    const r=await api(API.batch,{Authorization:`Bearer ${gat()}`,token:W.tok}),list=r.data||r||[];
+    const r = await api(API.batch, {}, { Authorization: `Bearer ${gat()}` });
+    const list = r.data || r || [];
     if(!list.length){g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div><h3>No Batches</h3></div>';return;}
     W.batches=list;renderBatches(list);
   }catch(e){g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h3>Error</h3></div>';}
@@ -986,7 +979,8 @@ async function openSubj(cid,cnm){
   W.course={id:cid,name:cnm};document.getElementById('stitle').textContent=cnm;show('pgSubj');
   const g=document.getElementById('gs');g.innerHTML='<div class="skel sk-r"></div><div class="skel sk-r"></div><div class="skel sk-r"></div>';
   try{
-    const r=await api(`${API.subj}${cid}&parent_id=-1`,th()),list=r.data||[];
+    const r = await api(API.subj, { courseid: cid, parent_id: -1 });
+    const list = r.data || [];
     if(!list.length){g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div><h3>No Subjects</h3></div>';return;}
     const SEm=['📗','📘','📙','📕','🧪','📐','🌍','📝'];
     g.innerHTML=list.map((s,i)=>{
@@ -1001,7 +995,8 @@ async function openTopic(sid,snm){
   W.subj={id:sid,name:snm};document.getElementById('ttitle').textContent=snm;show('pgTopic');
   const g=document.getElementById('gt');g.innerHTML='<div class="skel sk-r"></div><div class="skel sk-r"></div><div class="skel sk-r"></div>';
   try{
-    const r=await api(`${API.topic}${W.course.id}&subjectid=${sid}&start=-1`,th()),list=r.data||[];
+    const r = await api(API.topic, { courseid: W.course.id, subjectid: sid, start: -1 });
+    const list = r.data || [];
     if(!list.length){g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div><h3>No Topics</h3></div>';return;}
     g.innerHTML=list.map((t,i)=>{
       const nm=t.topic_name||`Topic ${i+1}`,id=t.topicid||t.id||i;
@@ -1013,7 +1008,8 @@ async function openVids(tid,tnm){
   W.topic={id:tid,name:tnm};document.getElementById('vtitle').textContent=tnm;show('pgVid');
   const g=document.getElementById('gv');g.innerHTML='<div class="skel sk-r"></div><div class="skel sk-r"></div><div class="skel sk-r"></div>';
   try{
-    const r=await api(`${API.vlist}${W.course.id}&subjectid=${W.subj.id}&topicid=${tid}&conceptid=&start=-1`,th()),list=r.data||[];
+    const r = await api(API.vlist, { courseid: W.course.id, subjectid: W.subj.id, topicid: tid, conceptid: '', start: -1 });
+    const list = r.data || [];
     if(!list.length){g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg></div><h3>No Videos</h3></div>';return;}
     g.innerHTML=list.map((v,i)=>{
       const nm=v.Title||v.title||v.content_name||`Video ${i+1}`,id=v.id||v.content_id||i,img=v.thumbnail||'',cid=v.course_id||W.course.id;
@@ -1030,8 +1026,9 @@ async function openVids(tid,tnm){
 async function loadVdet(vid,title,cid){
   toast('Loading...','');
   try{
-    const url=`${API.vdet}${gat()}&userid=517077&course_id=${cid}&video_id=${vid}&id=${W.aid}`;
-    const r=await api(url),list=r.data||r||[],v=Array.isArray(list)?list[0]:list;
+    const r = await api(API.vdet, { token: gat(), userid: '517077', course_id: cid, video_id: vid, id: W.aid });
+    const list = r.data || r || [];
+    const v = Array.isArray(list) ? list[0] : list;
     if(!v)throw new Error();
     const qualities=v.qualities||{},pdf1=v.pdf_link||v.pdf1||'',pdf2=v.pdf_link2||v.pdf2||'',date=v.date_and_time||'',vt=v.title||title;
     cvd={vid,cid,qualities,pdf1,pdf2,vt,date};
@@ -1114,8 +1111,8 @@ async function goLive(){
   g.innerHTML='<div class="skel sk-r"></div><div class="skel sk-r"></div><div class="skel sk-r"></div>';
   try{
     const cid=W.course?.id||'1';
-    const r=await api(`${API.live}${gat()}&userid=517077&course_id=${cid}`);
-    const list=r.data||[];
+    const r = await api(API.live, { token: gat(), userid: '517077', course_id: cid });
+    const list = r.data || [];
     if(!list.length){g.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg></div><h3>No Live Classes</h3></div>';return;}
     g.innerHTML=list.map(v=>{
       const su=v.primary_stream_url||v.stream_url||v.hls_url||v.qualities?.high||'';
